@@ -24,7 +24,7 @@
 </style>
 
 <body>
-  <h1>AUS Clusters</h1>
+  <h1>AUS Themes</h1>
 
   <div class="controls">
     <input id="search" type="text" placeholder="Type to search">
@@ -43,7 +43,8 @@
 
 <script>
 const columns = [
-  {title:"cluster id", field:"id", sorter:"number", headerFilter:"input", width:120},
+  {title:"cluster id", field:"cluster_id", sorter:"number", headerFilter:"input", width:120},
+  {title:"theme id", field:"theme_id", sorter:"number", headerFilter:"input", width:120},
   {title:"name", field:"name", sorter:"string", headerFilter:"input", width:220},
   {
     title:"description",
@@ -59,7 +60,7 @@ const columns = [
 const table = new Tabulator("#table", {
   height:"700px",
   layout:"fitDataStretch",
-  ajaxURL:"aus_clusters.json",
+  ajaxURL:"aus_themes.json",
   pagination:true,
   paginationSize:10,
   paginationSizeSelector:[10,25,50,100],
