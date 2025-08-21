@@ -14,16 +14,15 @@
   #table { border:1px solid #e5e7eb; }
 
   /* compact rows */
-  .tabulator-cell { padding:4px 6px; }
-  .tabulator-row { min-height:26px; }
+  .tabulator-row { min-height: 0; }
+  .tabulator-cell { padding: 2px 6px; }
 
-  /* wrap long text only in these columns */
-  .tabulator-cell.wrap {
+  /* wrapped cells */
+  .wrap-cell {
     white-space: normal !important;
     overflow-wrap: anywhere;
-    line-height:1.25;
-    padding-top:4px;
-    padding-bottom:4px;
+    line-height: 1.2;
+    margin: 0;
   }
 
   input,button,select { padding:6px 10px; }
@@ -48,32 +47,39 @@
   <div id="table"></div>
 
 <script>
-// JSON keys expected: cluster_id, theme_id, explanation, title, abstract
+function esc(s){ return String(s ?? "").replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
+function wrapFormatter(cell){
+  const div = document.createElement("div");
+  div.className = "wrap-cell";
+  div.innerHTML = esc(cell.getValue());
+  return div;
+}
+
+// expected keys: cluster_id, theme_id, explanation, title, abstract
 const columns = [
-  {title:"Cluster ID", field:"cluster_id", sorter:"number", headerFilter:"input", width:110},
-  {title:"Theme ID", field:"theme_id", sorter:"number", headerFilter:"input", width:110},
+  {title:"Cluster ID", field:"cluster_id", sorter:"number", headerFilter:"input", width:100},
+  {title:"Theme ID", field:"theme_id", sorter:"number", headerFilter:"input", width:100},
   {title:"Explanation", field:"explanation", sorter:"string", headerFilter:"input",
-    cssClass:"wrap", formatter:"plaintext", widthGrow:3},
+    formatter:wrapFormatter, widthGrow:3},
   {title:"Title", field:"title", sorter:"string", headerFilter:"input",
-    cssClass:"wrap", formatter:"plaintext", widthGrow:2},
+    formatter:wrapFormatter, widthGrow:2},
   {title:"Abstract", field:"abstract", sorter:"string", headerFilter:"input",
-    cssClass:"wrap", formatter:"plaintext", widthGrow:4},
+    formatter:wrapFormatter, widthGrow:4},
 ];
 
 const table = new Tabulator("#table", {
-  height:"700px",
+  height:"70vh",
   layout:"fitDataStretch",
-  ajaxURL:"aus_classification.json", // your exported JSON file
+  ajaxURL:"aus_classification.json", // your JSON file
   pagination:true,
-  paginationSize:10,
+  paginationSize:25,
   paginationSizeSelector:[10,25,50,100],
-  rowHeight:26,                // compact base height
-  variableHeight:true,         // auto-grow only when needed
-  columnDefaults:{ vertAlign:"top" },
+  rowHeight:22,               // compact base height
+  variableHeight:true,        // grow only when content needs it
   columns
 });
 
-// global search
+// search
 const searchInput = document.getElementById("search");
 searchInput.addEventListener("input", () => {
   const q = searchInput.value.trim();
