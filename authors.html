@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Faculty Authors</title>
+
+<link href="https://unpkg.com/tabulator-tables@5.6.0/dist/css/tabulator.min.css" rel="stylesheet">
+<script src="https://unpkg.com/tabulator-tables@5.6.0/dist/js/tabulator.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<style>
+  body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; margin: 16px; }
+  .controls { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0 10px; }
+  #table { border: 1px solid #e5e7eb; }
+
+  /* Home button */
+  .topbar { margin-bottom: 10px; }
+  .home-btn {
+    display:inline-block; text-decoration:none; color:#111827;
+    border:1px solid #e5e7eb; border-radius:8px; padding:6px 10px; background:#f9fafb;
+  }
+  .home-btn:hover { background:#f3f4f6; }
+
+  /* Wrap long text (designation/URL if needed) */
+  .tabulator-cell.wrap { white-space: normal !important; word-wrap: break-word; line-height: 1.4; }
+
+  input, button, select { padding: 6px 10px; }
+</style>
+
+<body>
+  <header class="topbar">
+    <a href="index.html" class="home-btn" title="Go to Home">← Home</a>
+  </header>
+
+  <h1>Faculty Authors</h1>
+
+  <div class="controls">
+    <input id="search" type="text" placeholder="Type to search">
+    <select id="page-size">
+      <option value="10">10 rows</option>
+      <option value="25">25 rows</option>
+      <option value="50">50 rows</option>
+      <option value="100">100 rows</option>
+    </select>
+    <button id="download-xlsx">Download Excel</button>
+    <button id="download-csv">Download CSV</button>
+    <button id="clear">Clear filters</button>
+  </div>
+
+  <div id="table"></div>
+
+<script>
+const linkFormatter = (cell) => {
+  const url = (cell.getValue() || "").trim();
+  if (!url) return "";
+  const safe = url.replace(/"/g, "&quot;");
+  return `<a href="${safe}" target="_blank" rel="noopener">${safe}</a>`;
+};
+
+const columns = [
+  {title:"ORCID", field:"orcid", sorter:"string", headerFilter:"input", width:170},
+  {title:"Scopus ID", field:"scopus_id", sorter:"number", headerFilter:"input", width:120, hozAlign:"center"},
+  {title:"First Name", field:"first_name", sorter:"string", headerFilter:"input", width:160},
+  {title:"Last Name", field:"last_name", sorter:"string", headerFilter:"input", width:160},
+  {title:"Department", field:"department", sorter:"string", headerFilter:"input", width:180},
+  {title:"Designation", field:"designation", sorter:"string", headerFilter:"input", cssClass:"wrap", widthGrow:2},
+  {title:"Scopus URL", field:"scopus_url", sorter:"string", headerFilter:"input", cssClass:"wrap", formatter:linkFormatter, widthGrow:2},
+];
+
+const table = new Tabulator("#table", {
+  height:"700px",
+  layout:"fitDataStretch",
+  ajaxURL:"aus_authors.json",
+  pagination:true,
+  paginationSize:10,
+  paginationSizeSelector:[10,25,50,100],
+  columns,
+  columnDefaults:{ vertAlign:"top" },
+  variableHeight:true,
+});
+
+// global search
+const searchInput = document.getElementById("search");
+searchInput.addEventListener("input", () => {
+  const q = searchInput.value.trim();
+  if (!q) { table.clearFilter(true); return; }
+  const fields = columns.map(c => c.field);
+  table.setFilter(fields.map(f => ({field:f, type:"like", value:q})), "or");
+});
+
+// change page size
+document.getElementById("page-size").addEventListener("change", e => {
+  table.setPageSize(parseInt(e.target.value,10));
+});
+
+// downloads
+document.getElementById("download-xlsx").addEventListener("click", () => {
+  table.download("xlsx", "authors.xlsx", {sheetName:"Authors"});
+});
+document.getElementById("download-csv").addEventListener("click", () => {
+  table.download("csv", "authors.csv");
+});
+
+// clear filters
+document.getElementById("clear").addEventListener("click", () => {
+  searchInput.value = "";
+  table.clearFilter(true);
+});
+</script>
+</body>
+</html>
