@@ -1,29 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Postgres Table on GitHub Pages</title>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AUS Themes</title>
 
-<link href="https://unpkg.com/tabulator-tables@5.6.0/dist/css/tabulator.min.css" rel="stylesheet">
-<script src="https://unpkg.com/tabulator-tables@5.6.0/dist/js/tabulator.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <link href="https://unpkg.com/tabulator-tables@5.6.0/dist/css/tabulator.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/tabulator-tables@5.6.0/dist/js/tabulator.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-<style>
-  body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; margin: 16px; }
-  .controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
-  #table { border: 1px solid #e5e7eb; }
+  <style>
+    :root { --border:#e5e7eb; --fg:#111; --bg:#fff; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; margin: 16px; color:var(--fg); background:var(--bg); }
+    h1 { margin: 10px 0 14px; }
 
-  /* wrap long text in description cells */
-  .tabulator-cell.wrap {
-    white-space: normal !important;
-    word-wrap: break-word;
-    line-height: 1.4;
-  }
+    .controls { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 14px; }
+    input, button, select { padding: 6px 10px; border:1px solid var(--border); border-radius:8px; }
+    button { cursor: pointer; }
+    #table { border: 1px solid var(--border); }
 
-  input, button, select { padding: 6px 10px; }
-</style>
+    /* wrap long text in description cells */
+    .tabulator-cell.wrap { white-space: normal !important; word-wrap: break-word; line-height: 1.4; }
 
+    /* Top bar / Home button */
+    .topbar{
+      position: sticky; top: 0; z-index: 1000;
+      background: var(--bg); border-bottom:1px solid var(--border);
+      padding:10px 0 14px; margin-bottom:10px;
+    }
+    .home-btn{
+      display:inline-block; text-decoration:none; font-weight:600;
+      padding:8px 12px; border:1px solid var(--border); border-radius:8px;
+      color:var(--fg);
+    }
+    .home-btn:hover{ background:#f6f6f6; }
+  </style>
+</head>
 <body>
+  <header class="topbar">
+    <a href="index.html" class="home-btn" title="Go to Home">← Home</a>
+  </header>
+
   <h1>Themes</h1>
 
   <div class="controls">
@@ -41,62 +58,61 @@
 
   <div id="table"></div>
 
-<script>
-const columns = [
-  {title:"cluster id", field:"cluster_id", sorter:"number", headerFilter:"input", width:120},
-  {title:"theme id", field:"theme_id", sorter:"number", headerFilter:"input", width:120},
-  {title:"name", field:"name", sorter:"string", headerFilter:"input", width:220},
-  {
-    title:"description",
-    field:"description",
-    sorter:"string",
-    headerFilter:"input",
-    cssClass:"wrap",
-    formatter:"textarea",       // multi-line rendering
-    widthGrow:3                 // give it more horizontal room
-  },
-];
+  <script>
+    const columns = [
+      {title:"cluster id", field:"cluster_id", sorter:"number", headerFilter:"input", width:120},
+      {title:"theme id", field:"theme_id", sorter:"number", headerFilter:"input", width:120},
+      {title:"name", field:"name", sorter:"string", headerFilter:"input", width:260},
+      {
+        title:"description",
+        field:"description",
+        sorter:"string",
+        headerFilter:"input",
+        cssClass:"wrap",
+        formatter:"textarea",
+        widthGrow:3
+      },
+    ];
 
-const table = new Tabulator("#table", {
-  height:"700px",
-  layout:"fitDataStretch",
-  ajaxURL:"aus_themes.json",
-  pagination:true,
-  paginationSize:10,
-  paginationSizeSelector:[10,25,50,100],
-  columns,
-  // make tall cells expand; align text to top for readability
-  columnDefaults:{ vertAlign:"top" },
-  variableHeight:true
-});
+    const table = new Tabulator("#table", {
+      height:"700px",
+      layout:"fitDataStretch",
+      ajaxURL:"aus_themes.json",   // expects fields: cluster_id, theme_id, name, description
+      pagination:true,
+      paginationSize:10,
+      paginationSizeSelector:[10,25,50,100],
+      columns,
+      columnDefaults:{ vertAlign:"top" },
+      variableHeight:true
+    });
 
-// global search
-const searchInput = document.getElementById("search");
-searchInput.addEventListener("input", () => {
-  const q = searchInput.value.trim();
-  if (!q) { table.clearFilter(true); return; }
-  const fields = columns.map(c => c.field);
-  table.setFilter(fields.map(f => ({field:f, type:"like", value:q})), "or");
-});
+    // Global search
+    const searchInput = document.getElementById("search");
+    searchInput.addEventListener("input", () => {
+      const q = searchInput.value.trim();
+      if (!q) { table.clearFilter(true); return; }
+      const fields = columns.map(c => c.field);
+      table.setFilter(fields.map(f => ({field:f, type:"like", value:q})), "or");
+    });
 
-// change page size
-document.getElementById("page-size").addEventListener("change", e => {
-  table.setPageSize(parseInt(e.target.value,10));
-});
+    // Change page size
+    document.getElementById("page-size").addEventListener("change", e => {
+      table.setPageSize(parseInt(e.target.value,10));
+    });
 
-// downloads
-document.getElementById("download-xlsx").addEventListener("click", () => {
-  table.download("xlsx", "dataset.xlsx", {sheetName:"Data"});
-});
-document.getElementById("download-csv").addEventListener("click", () => {
-  table.download("csv", "dataset.csv");
-});
+    // Downloads
+    document.getElementById("download-xlsx").addEventListener("click", () => {
+      table.download("xlsx", "aus_themes.xlsx", {sheetName:"Themes"});
+    });
+    document.getElementById("download-csv").addEventListener("click", () => {
+      table.download("csv", "aus_themes.csv");
+    });
 
-// clear filters
-document.getElementById("clear").addEventListener("click", () => {
-  searchInput.value = "";
-  table.clearFilter(true);
-});
-</script>
+    // Clear filters
+    document.getElementById("clear").addEventListener("click", () => {
+      searchInput.value = "";
+      table.clearFilter(true);
+    });
+  </script>
 </body>
 </html>
