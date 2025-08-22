@@ -10,13 +10,36 @@
 
 <style>
   body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; margin:16px; }
-  .controls { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+  .controls { display:flex; gap:8px; flex-wrap:wrap; margin:10px 0; }
   #table { border:1px solid #e5e7eb; }
-  .tabulator-cell.wrap { white-space: normal !important; word-wrap: break-word; line-height:1.4; }
+
+  /* Compact rows + clamp long text so rows don't explode */
+  .tabulator-row .tabulator-cell { padding-top:6px; padding-bottom:6px; }
+  .tabulator-cell { vertical-align: top; } /* top-align multi-line cells */
+
+  .truncate-2, .truncate-3, .truncate-4 {
+    white-space: normal !important;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .truncate-2 { -webkit-line-clamp: 2; }
+  .truncate-3 { -webkit-line-clamp: 3; }
+  .truncate-4 { -webkit-line-clamp: 4; }
+
   input,button,select { padding:6px 10px; }
+
+  /* simple top bar with Home link */
+  .topbar { display:flex; align-items:center; justify-content:flex-start; margin-bottom:8px; }
+  .home-btn { text-decoration:none; font-weight:600; border:1px solid #e5e7eb; padding:6px 10px; border-radius:6px; }
+  .home-btn:hover { background:#f3f4f6; }
 </style>
 
 <body>
+  <header class="topbar">
+    <a href="index.html" class="home-btn" title="Go to Home">← Home</a>
+  </header>
+
   <h1>Cluster Theme Classification</h1>
 
   <div class="controls">
@@ -38,13 +61,37 @@
 // columns expect JSON keys: cluster_id, theme_id, explanation, title, abstract
 const columns = [
   {title:"Cluster ID", field:"cluster_id", sorter:"number", headerFilter:"input", width:110, hozAlign:"center"},
-  {title:"Theme ID", field:"theme_id", sorter:"number", headerFilter:"input", width:110, hozAlign:"center"},
-  {title:"Explanation", field:"explanation", sorter:"string", headerFilter:"input",
-    cssClass:"wrap", formatter:"textarea", widthGrow:3},
-  {title:"Title", field:"title", sorter:"string", headerFilter:"input",
-    cssClass:"wrap", formatter:"textarea", widthGrow:2},
-  {title:"Abstract", field:"abstract", sorter:"string", headerFilter:"input",
-    cssClass:"wrap", formatter:"textarea", widthGrow:4},
+  {title:"Theme ID",   field:"theme_id",   sorter:"number", headerFilter:"input", width:110, hozAlign:"center"},
+  {
+    title:"Explanation",
+    field:"explanation",
+    sorter:"string",
+    headerFilter:"input",
+    cssClass:"truncate-3",          // show 3 lines max
+    formatter:"plaintext",
+    tooltip: cell => (cell.getValue() || "").trim(),
+    widthGrow:3
+  },
+  {
+    title:"Title",
+    field:"title",
+    sorter:"string",
+    headerFilter:"input",
+    cssClass:"truncate-2",          // show 2 lines max
+    formatter:"plaintext",
+    tooltip: cell => (cell.getValue() || "").trim(),
+    widthGrow:2
+  },
+  {
+    title:"Abstract",
+    field:"abstract",
+    sorter:"string",
+    headerFilter:"input",
+    cssClass:"truncate-4",          // show 4 lines max
+    formatter:"plaintext",
+    tooltip: cell => (cell.getValue() || "").trim(),
+    widthGrow:4
+  },
 ];
 
 const table = new Tabulator("#table", {
@@ -55,8 +102,9 @@ const table = new Tabulator("#table", {
   paginationSize:10,
   paginationSizeSelector:[10,25,50,100],
   columns,
-  columnDefaults:{ vertAlign:"top" },
-  variableHeight:true
+  rowHeight:64,          // compact rows (tweak as you like)
+  variableHeight:false,  // keep rows fixed-height; long text is clamped
+  columnDefaults:{ vertAlign:"top" }
 });
 
 // global search
