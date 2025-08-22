@@ -15,42 +15,46 @@
     h1 { margin: 10px 0 14px; }
 
     .controls { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 14px; }
-    input, button, select { padding: 6px 10px; border:1px solid var(--border); border-radius:8px; }
+    input, button { padding: 6px 10px; border:1px solid var(--border); border-radius:8px; }
     button { cursor: pointer; }
     #table { border: 1px solid var(--border); }
+
+    /* thin grey lines between rows */
+    .tabulator-row { border-bottom: 1px solid #d1d5db; }
 
     /* wrap long text in description cells */
     .tabulator-cell.wrap { white-space: normal !important; word-wrap: break-word; line-height: 1.4; }
 
-    /* Top bar / Home button */
-    .topbar{
+    /* Top nav (shared) */
+    .topnav{
       position: sticky; top: 0; z-index: 1000;
-      background: var(--bg); border-bottom:1px solid var(--border);
-      padding:10px 0 14px; margin-bottom:10px;
+      display:flex; gap:10px; align-items:center;
+      background:#fff; border-bottom:1px solid var(--border);
+      padding:10px 12px; margin:-16px -16px 16px -16px; /* stretch edge-to-edge */
     }
-    .home-btn{
-      display:inline-block; text-decoration:none; font-weight:600;
-      padding:8px 12px; border:1px solid var(--border); border-radius:8px;
-      color:var(--fg);
+    .topnav a{
+      text-decoration:none; color:#334155; padding:6px 10px;
+      border-radius:6px; font-weight:500;
     }
-    .home-btn:hover{ background:#f6f6f6; }
+    .topnav a:hover{ background:#f1f5f9; }
+    .topnav a.active{ background:#111827; color:#fff; }
   </style>
 </head>
 <body>
-  <header class="topbar">
-    <a href="index.html" class="home-btn" title="Go to Home">← Home</a>
-  </header>
+
+  <!-- Shared top navigation -->
+  <div class="topnav">
+    <a href="./">Home</a>
+    <a href="clusters.html?dataset=table1">Clusters</a>
+    <a href="themes.html?dataset=table2">Themes</a>
+    <a href="classification.html?dataset=table3">Classification</a>
+    <a href="authors.html?dataset=table4">Authors</a>
+  </div>
 
   <h1>Themes</h1>
 
   <div class="controls">
     <input id="search" type="text" placeholder="Type to search">
-    <select id="page-size">
-      <option value="10">10 rows</option>
-      <option value="25">25 rows</option>
-      <option value="50">50 rows</option>
-      <option value="100">100 rows</option>
-    </select>
     <button id="download-xlsx">Download Excel</button>
     <button id="download-csv">Download CSV</button>
     <button id="clear">Clear filters</button>
@@ -59,9 +63,21 @@
   <div id="table"></div>
 
   <script>
+    // highlight the current page link in the top nav
+    (function(){
+      const norm = u => (u || "").split('?')[0].replace('./','') || 'index.html';
+      const current = norm(location.pathname.split('/').pop());
+      document.querySelectorAll('.topnav a').forEach(a => {
+        const target = norm(a.getAttribute('href'));
+        if (current === target || (current === 'index.html' && (target === '' || target === './'))) {
+          a.classList.add('active');
+        }
+      });
+    })();
+
     const columns = [
-      {title:"cluster id", field:"cluster_id", sorter:"number", headerFilter:"input", width:120, hozAlign:"center"},
-      {title:"theme id", field:"theme_id", sorter:"number", headerFilter:"input", width:120, hozAlign:"center"},
+      {title:"cluster id", field:"cluster_id", sorter:"number", headerFilter:"input", width:120, hozAlign:"center", headerHozAlign:"center"},
+      {title:"theme id", field:"theme_id", sorter:"number", headerFilter:"input", width:120, hozAlign:"center", headerHozAlign:"center"},
       {title:"name", field:"name", sorter:"string", headerFilter:"input", width:260},
       {
         title:"description",
@@ -75,12 +91,10 @@
     ];
 
     const table = new Tabulator("#table", {
-      height:"700px",
+      // no fixed height -> no internal scroll; page scrolls naturally
       layout:"fitDataStretch",
       ajaxURL:"aus_themes.json",   // expects fields: cluster_id, theme_id, name, description
-      pagination:true,
-      paginationSize:10,
-      paginationSizeSelector:[10,25,50,100],
+      pagination:false,            // show all rows (no 10/25/50 pager)
       columns,
       columnDefaults:{ vertAlign:"top" },
       variableHeight:true
@@ -93,11 +107,6 @@
       if (!q) { table.clearFilter(true); return; }
       const fields = columns.map(c => c.field);
       table.setFilter(fields.map(f => ({field:f, type:"like", value:q})), "or");
-    });
-
-    // Change page size
-    document.getElementById("page-size").addEventListener("change", e => {
-      table.setPageSize(parseInt(e.target.value,10));
     });
 
     // Downloads
