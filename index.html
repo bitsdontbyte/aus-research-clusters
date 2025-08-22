@@ -59,6 +59,23 @@
   <a href="authors.html?dataset=table4">Authors</a>
 </div>
 
+<script>
+  // Get current path (ignores domain)
+  const current = window.location.pathname.split('/').pop() || 'index.html';
+
+  document.querySelectorAll('.topnav a').forEach(link => {
+    const href = link.getAttribute('href');
+
+    // Normalize both to compare file names only
+    const target = href.split('/').pop() || 'index.html';
+
+    if (target === current) {
+      link.classList.add('active');
+    }
+  });
+</script>
+
+
 <div class="controls">
   <label>
     Layout:
