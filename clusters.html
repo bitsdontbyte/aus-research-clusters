@@ -17,13 +17,16 @@
     .controls { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 14px; }
     input, button, select { padding: 6px 10px; border:1px solid var(--border); border-radius:8px; }
     button { cursor: pointer; }
+
+    /* Tabulator table borders */
     #table { border: 1px solid var(--border); }
+    .tabulator { border: none; }
+    .tabulator-header { border-bottom: 1px solid var(--border); }
+    /* thin grey lines between rows */
+    .tabulator-row { border-bottom: 1px solid #d1d5db; }
 
     /* wrap long text in description cells */
     .tabulator-cell.wrap { white-space: normal !important; word-wrap: break-word; line-height: 1.4; }
-
-    /* Thin divider between rows (optional) */
-    .tabulator-row { border-bottom: 1px solid #eee; }
 
     /* Top nav */
     .topnav{
@@ -55,12 +58,6 @@
 
   <div class="controls">
     <input id="search" type="text" placeholder="Type to search">
-    <select id="page-size">
-      <option value="10">10 rows</option>
-      <option value="25">25 rows</option>
-      <option value="50">50 rows</option>
-      <option value="100">100 rows</option>
-    </select>
     <button id="download-xlsx">Download Excel</button>
     <button id="download-csv">Download CSV</button>
     <button id="clear">Clear filters</button>
@@ -82,7 +79,7 @@
     })();
 
     const columns = [
-      {title:"cluster id", field:"cluster_id", sorter:"number", headerFilter:"input", width:120, hozAlign:"center"},
+      {title:"cluster id", field:"cluster_id", sorter:"number", headerFilter:"input", width:120, hozAlign:"center", headerHozAlign:"center"},
       {title:"name", field:"name", sorter:"string", headerFilter:"input", width:260},
       {
         title:"description",
@@ -96,12 +93,10 @@
     ];
 
     const table = new Tabulator("#table", {
-      height:"700px",
+      // no height -> no internal scroll; page scrolls naturally
       layout:"fitDataStretch",
       ajaxURL:"aus_clusters.json",   // expects fields: cluster_id, name, description
-      pagination:true,
-      paginationSize:10,
-      paginationSizeSelector:[10,25,50,100],
+      pagination:false,              // no pagination; show all rows
       columns,
       columnDefaults:{ vertAlign:"top" },
       variableHeight:true
@@ -114,11 +109,6 @@
       if (!q) { table.clearFilter(true); return; }
       const fields = columns.map(c => c.field);
       table.setFilter(fields.map(f => ({field:f, type:"like", value:q})), "or");
-    });
-
-    // Change page size
-    document.getElementById("page-size").addEventListener("change", e => {
-      table.setPageSize(parseInt(e.target.value,10));
     });
 
     // Downloads
