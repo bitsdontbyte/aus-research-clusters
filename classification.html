@@ -83,11 +83,11 @@
 const columns = [
   {title:"Cluster ID", field:"cluster_id", sorter:"number", headerFilter:"input", width:120, hozAlign:"center", headerHozAlign:"center"},
   {title:"Theme ID",   field:"theme_id",   sorter:"number", headerFilter:"input", width:120, hozAlign:"center", headerHozAlign:"center"},
-  {title:"Explanation", field:"explanation", sorter:"string", headerFilter:"input", width:480,
+  {title:"Explanation", field:"explanation", sorter:"string", headerFilter:"input", width:380,
     cssClass:"wrap", formatter:"textarea", tooltip:cell => (cell.getValue() || "").trim()},
   {title:"Title", field:"title", sorter:"string", headerFilter:"input", width:360,
     cssClass:"wrap", formatter:"textarea", tooltip:cell => (cell.getValue() || "").trim()},
-  {title:"Abstract", field:"abstract", sorter:"string", headerFilter:"input", width:640,
+  {title:"Abstract", field:"abstract", sorter:"string", headerFilter:"input", width:540,
     cssClass:"wrap", formatter:"textarea", tooltip:cell => (cell.getValue() || "").trim()},
 ];
 
