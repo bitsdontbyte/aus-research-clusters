@@ -32,7 +32,7 @@
     <a href="index.html" class="home-btn" title="Go to Home">← Home</a>
   </header>
 
-  <h1>Faculty Authors</h1>
+  <h1>Engineering Faculty</h1>
 
   <div class="controls">
     <input id="search" type="text" placeholder="Type to search">
@@ -63,7 +63,7 @@ const columns = [
   {title:"First Name", field:"first_name", sorter:"string", headerFilter:"input", width:150, hozAlign:"center", headerHozAlign:"center"},
   {title:"Last Name", field:"last_name", sorter:"string", headerFilter:"input", width:150, hozAlign:"center", headerHozAlign:"center"},
   {title:"Department", field:"department", sorter:"string", headerFilter:"input", width:120, hozAlign:"center", headerHozAlign:"center"},
-  {title:"Designation", field:"designation", sorter:"string", headerFilter:"input", cssClass:"wrap", widthGrow:2},
+  {title:"Designation", field:"designation", width:120, sorter:"string", headerFilter:"input", cssClass:"wrap", formatter:"textarea"},
   {title:"Scopus URL", field:"scopus_url", sorter:"string", headerFilter:"input", cssClass:"wrap", formatter:linkFormatter, widthGrow:2},
 ];
 
