@@ -1,47 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Engineering Faculty</title>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Engineering Faculty</title>
 
-<link href="https://unpkg.com/tabulator-tables@5.6.0/dist/css/tabulator.min.css" rel="stylesheet">
-<script src="https://unpkg.com/tabulator-tables@5.6.0/dist/js/tabulator.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <link href="https://unpkg.com/tabulator-tables@5.6.0/dist/css/tabulator.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/tabulator-tables@5.6.0/dist/js/tabulator.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-<style>
-  body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; margin: 16px; }
-  .controls { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0 10px; }
-  #table { border: 1px solid #e5e7eb; }
+  <style>
+    :root { --border:#e5e7eb; --fg:#111; --bg:#fff; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; margin:16px; color:var(--fg); background:var(--bg); }
+    h1 { margin: 10px 0 14px; }
 
-  /* Home button */
-  .topbar { margin-bottom: 10px; }
-  .home-btn {
-    display:inline-block; text-decoration:none; color:#111827;
-    border:1px solid #e5e7eb; border-radius:8px; padding:6px 10px; background:#f9fafb;
-  }
-  .home-btn:hover { background:#f3f4f6; }
+    .controls { display:flex; gap:8px; flex-wrap:wrap; margin:12px 0 12px; }
+    input,button { padding:6px 10px; border:1px solid var(--border); border-radius:8px; }
+    button { cursor:pointer; }
+    #table { border:1px solid var(--border); }
 
-  /* Wrap long text (designation/URL if needed) */
-  .tabulator-cell.wrap { white-space: normal !important; word-wrap: break-word; line-height: 1.4; }
+    /* thin grey line between rows */
+    .tabulator-row { border-bottom: 1px solid #d1d5db; }
+    .tabulator-row .tabulator-cell { border-bottom: 0 !important; }
 
-  input, button, select { padding: 6px 10px; }
-</style>
+    /* wrap long text */
+    .tabulator-cell.wrap { white-space: normal !important; word-wrap: break-word; line-height: 1.4; }
+    .tabulator-cell { vertical-align: top; }
 
+    /* Top nav (shared across pages) */
+    .topnav{
+      position: sticky; top: 0; z-index: 1000;
+      display:flex; gap:10px; align-items:center;
+      background:#fff; border-bottom:1px solid var(--border);
+      padding:10px 12px; margin:-16px -16px 16px -16px;
+    }
+    .topnav a{
+      text-decoration:none; color:#334155; padding:6px 10px;
+      border-radius:6px; font-weight:500;
+    }
+    .topnav a:hover{ background:#f1f5f9; }
+    .topnav a.active{ background:#111827; color:#fff; }
+  </style>
+</head>
 <body>
-  <header class="topbar">
-    <a href="index.html" class="home-btn" title="Go to Home">← Home</a>
-  </header>
+
+  <!-- Shared top navigation -->
+  <div class="topnav">
+    <a href="./">Home</a>
+    <a href="clusters.html?dataset=table1">Clusters</a>
+    <a href="themes.html?dataset=table2">Themes</a>
+    <a href="classification.html?dataset=table3">Classification</a>
+    <a href="authors.html?dataset=table4">Authors</a>
+  </div>
 
   <h1>Engineering Faculty</h1>
 
   <div class="controls">
     <input id="search" type="text" placeholder="Type to search">
-    <select id="page-size">
-      <option value="10">10 rows</option>
-      <option value="25">25 rows</option>
-      <option value="50">50 rows</option>
-      <option value="100">100 rows</option>
-    </select>
     <button id="download-xlsx">Download Excel</button>
     <button id="download-csv">Download CSV</button>
     <button id="clear">Clear filters</button>
@@ -50,6 +65,18 @@
   <div id="table"></div>
 
 <script>
+/* highlight current page link in the top nav */
+(function(){
+  const norm = u => (u || "").split('?')[0].replace('./','') || 'index.html';
+  const current = norm(location.pathname.split('/').pop());
+  document.querySelectorAll('.topnav a').forEach(a => {
+    const target = norm(a.getAttribute('href'));
+    if (current === target || (current === 'index.html' && (target === '' || target === './'))) {
+      a.classList.add('active');
+    }
+  });
+})();
+
 const linkFormatter = (cell) => {
   const url = (cell.getValue() || "").trim();
   if (!url) return "";
@@ -58,25 +85,22 @@ const linkFormatter = (cell) => {
 };
 
 const columns = [
-  {title:"ORCID", field:"orcid", sorter:"string", headerFilter:"input", width:160},
-  {title:"Scopus ID", field:"scopus_id", sorter:"number", headerFilter:"input", width:120, hozAlign:"center", headerHozAlign:"center"},
-  {title:"First Name", field:"first_name", sorter:"string", headerFilter:"input", width:150, hozAlign:"center", headerHozAlign:"center"},
-  {title:"Last Name", field:"last_name", sorter:"string", headerFilter:"input", width:150, hozAlign:"center", headerHozAlign:"center"},
-  {title:"Department", field:"department", sorter:"string", headerFilter:"input", width:120, hozAlign:"center", headerHozAlign:"center"},
-  {title:"Designation", field:"designation", width:120, sorter:"string", headerFilter:"input", cssClass:"wrap", formatter:"textarea"},
-  {title:"Scopus URL", field:"scopus_url", sorter:"string", headerFilter:"input", cssClass:"wrap", formatter:linkFormatter, widthGrow:2},
+  {title:"ORCID",       field:"orcid",      sorter:"string", headerFilter:"input", width:160},
+  {title:"Scopus ID",   field:"scopus_id",  sorter:"number", headerFilter:"input", width:120, hozAlign:"center", headerHozAlign:"center"},
+  {title:"First Name",  field:"first_name", sorter:"string", headerFilter:"input", width:150, hozAlign:"center", headerHozAlign:"center"},
+  {title:"Last Name",   field:"last_name",  sorter:"string", headerFilter:"input", width:150, hozAlign:"center", headerHozAlign:"center"},
+  {title:"Department",  field:"department", sorter:"string", headerFilter:"input", width:160, hozAlign:"center", headerHozAlign:"center"},
+  {title:"Designation", field:"designation", sorter:"string", headerFilter:"input", width:140, cssClass:"wrap", formatter:"textarea"},
+  {title:"Scopus URL",  field:"scopus_url", sorter:"string", headerFilter:"input", width:320, cssClass:"wrap", formatter:linkFormatter},
 ];
 
 const table = new Tabulator("#table", {
-  height:"700px",
   layout:"fitDataStretch",
   ajaxURL:"aus_authors.json",
-  pagination:true,
-  paginationSize:10,
-  paginationSizeSelector:[10,25,50,100],
+  pagination:false,          // no internal pagination -> page scrolls
   columns,
-  columnDefaults:{ vertAlign:"top" },
-  variableHeight:true,
+  variableHeight:true,       // allow wrapped rows to grow
+  columnDefaults:{ vertAlign:"top" }
 });
 
 // global search
@@ -86,11 +110,6 @@ searchInput.addEventListener("input", () => {
   if (!q) { table.clearFilter(true); return; }
   const fields = columns.map(c => c.field);
   table.setFilter(fields.map(f => ({field:f, type:"like", value:q})), "or");
-});
-
-// change page size
-document.getElementById("page-size").addEventListener("change", e => {
-  table.setPageSize(parseInt(e.target.value,10));
 });
 
 // downloads
