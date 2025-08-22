@@ -21,29 +21,20 @@
 
     /* thin grey line between rows */
     .tabulator-row { border-bottom: 1px solid #d1d5db; }
-    /* avoid double lines if theme adds cell borders */
     .tabulator-row .tabulator-cell { border-bottom: 0 !important; }
 
-    /* compact rows + clamp long text so rows don't explode */
+    /* wrap long text; keep rows compact but allow growth */
     .tabulator-row .tabulator-cell { padding-top:6px; padding-bottom:6px; }
-    .tabulator-cell { vertical-align: top; } /* top-align multi-line cells */
-
-    .truncate-2, .truncate-3, .truncate-4 {
-      white-space: normal !important;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .truncate-2 { -webkit-line-clamp: 2; }
-    .truncate-3 { -webkit-line-clamp: 3; }
-    .truncate-4 { -webkit-line-clamp: 4; }
+    .tabulator-cell { vertical-align: top; }
+    .wrap { white-space: normal !important; word-wrap: break-word; line-height: 1.4; }
+    .tabulator-cell .tabulator-data-tree-branch { display:none; } /* just in case, no tree */
 
     /* Top nav (shared) */
     .topnav{
       position: sticky; top: 0; z-index: 1000;
       display:flex; gap:10px; align-items:center;
       background:#fff; border-bottom:1px solid var(--border);
-      padding:10px 12px; margin:-16px -16px 16px -16px; /* stretch edge-to-edge */
+      padding:10px 12px; margin:-16px -16px 16px -16px;
     }
     .topnav a{
       text-decoration:none; color:#334155; padding:6px 10px;
@@ -88,50 +79,24 @@
   });
 })();
 
-// columns expect JSON keys: cluster_id, theme_id, explanation, title, abstract
+/* Fixed widths for all columns + wrap on text-heavy ones */
 const columns = [
-  {title:"Cluster ID", field:"cluster_id", sorter:"number", headerFilter:"input", width:110, hozAlign:"center", headerHozAlign:"center"},
-  {title:"Theme ID",   field:"theme_id",   sorter:"number", headerFilter:"input", width:110, hozAlign:"center", headerHozAlign:"center"},
-  {
-    title:"Explanation",
-    field:"explanation",
-    sorter:"string",
-    headerFilter:"input",
-    cssClass:"truncate-3",          // show 3 lines max
-    formatter:"plaintext",
-    tooltip: cell => (cell.getValue() || "").trim(),
-    widthGrow:3
-  },
-  {
-    title:"Title",
-    field:"title",
-    sorter:"string",
-    headerFilter:"input",
-    cssClass:"truncate-2",          // show 2 lines max
-    formatter:"plaintext",
-    tooltip: cell => (cell.getValue() || "").trim(),
-    widthGrow:2
-  },
-  {
-    title:"Abstract",
-    field:"abstract",
-    sorter:"string",
-    headerFilter:"input",
-    cssClass:"truncate-4",          // show 4 lines max
-    formatter:"plaintext",
-    tooltip: cell => (cell.getValue() || "").trim(),
-    widthGrow:4
-  },
+  {title:"Cluster ID", field:"cluster_id", sorter:"number", headerFilter:"input", width:120, hozAlign:"center", headerHozAlign:"center"},
+  {title:"Theme ID",   field:"theme_id",   sorter:"number", headerFilter:"input", width:120, hozAlign:"center", headerHozAlign:"center"},
+  {title:"Explanation", field:"explanation", sorter:"string", headerFilter:"input", width:480,
+    cssClass:"wrap", formatter:"textarea", tooltip:cell => (cell.getValue() || "").trim()},
+  {title:"Title", field:"title", sorter:"string", headerFilter:"input", width:360,
+    cssClass:"wrap", formatter:"textarea", tooltip:cell => (cell.getValue() || "").trim()},
+  {title:"Abstract", field:"abstract", sorter:"string", headerFilter:"input", width:640,
+    cssClass:"wrap", formatter:"textarea", tooltip:cell => (cell.getValue() || "").trim()},
 ];
 
 const table = new Tabulator("#table", {
-  // No fixed height -> no internal scroll; page itself will scroll
-  layout:"fitDataStretch",
-  ajaxURL:"aus_classification.json", // set to your exported JSON file
-  pagination:false,                  // show all rows (no pager)
+  layout:"fitDataStretch",     // respects fixed widths; table may extend horizontally if needed
+  ajaxURL:"aus_classification.json",
+  pagination:false,            // show all rows; page scrolls
   columns,
-  rowHeight:64,          // compact rows (tweak as needed)
-  variableHeight:false,  // keep rows fixed-height; long text is clamped
+  variableHeight:true,         // allow rows to grow as text wraps
   columnDefaults:{ vertAlign:"top" }
 });
 
