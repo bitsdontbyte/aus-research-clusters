@@ -1,71 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Cluster Theme Classification</title>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cluster Theme Classification</title>
 
-<link href="https://unpkg.com/tabulator-tables@5.6.0/dist/css/tabulator.min.css" rel="stylesheet">
-<script src="https://unpkg.com/tabulator-tables@5.6.0/dist/js/tabulator.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <link href="https://unpkg.com/tabulator-tables@5.6.0/dist/css/tabulator.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/tabulator-tables@5.6.0/dist/js/tabulator.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-<style>
-  body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; margin:16px; }
-  .controls { display:flex; gap:8px; flex-wrap:wrap; margin:10px 0; }
-  #table { border:1px solid #e5e7eb; }
+  <style>
+    :root { --border:#e5e7eb; --fg:#111; --bg:#fff; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; margin:16px; color:var(--fg); background:var(--bg); }
+    h1 { margin: 10px 0 14px; }
 
-  /* Compact rows + clamp long text so rows don't explode */
-  .tabulator-row .tabulator-cell { padding-top:6px; padding-bottom:6px; }
-  .tabulator-cell { vertical-align: top; } /* top-align multi-line cells */
+    .controls { display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 14px; }
+    input,button { padding:6px 10px; border:1px solid var(--border); border-radius:8px; }
+    button { cursor:pointer; }
+    #table { border:1px solid var(--border); }
 
-  .truncate-2, .truncate-3, .truncate-4 {
-    white-space: normal !important;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .truncate-2 { -webkit-line-clamp: 2; }
-  .truncate-3 { -webkit-line-clamp: 3; }
-  .truncate-4 { -webkit-line-clamp: 4; }
+    /* thin grey line between rows */
+    .tabulator-row { border-bottom: 1px solid #d1d5db; }
+    /* avoid double lines if theme adds cell borders */
+    .tabulator-row .tabulator-cell { border-bottom: 0 !important; }
 
-  input,button,select { padding:6px 10px; }
+    /* compact rows + clamp long text so rows don't explode */
+    .tabulator-row .tabulator-cell { padding-top:6px; padding-bottom:6px; }
+    .tabulator-cell { vertical-align: top; } /* top-align multi-line cells */
 
-  /* simple top bar with Home link */
-  .topbar { display:flex; align-items:center; justify-content:flex-start; margin-bottom:8px; }
-  .home-btn { text-decoration:none; font-weight:600; border:1px solid #e5e7eb; padding:6px 10px; border-radius:6px; }
-  .home-btn:hover { background:#f3f4f6; }
-  
-  /* Thin divider between rows */
-	#table .tabulator-row {
-	  border-bottom: 2px solid #e5e7eb !important; /* light gray line */
-	}
+    .truncate-2, .truncate-3, .truncate-4 {
+      white-space: normal !important;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .truncate-2 { -webkit-line-clamp: 2; }
+    .truncate-3 { -webkit-line-clamp: 3; }
+    .truncate-4 { -webkit-line-clamp: 4; }
 
-	/* Avoid double lines if your theme adds cell borders */
-	#table .tabulator-row .tabulator-cell {
-	  border-bottom: 0 !important;
-	}
-
-	/* Optional: no border under the last row */
-	#table .tabulator-row:last-child {
-	  border-bottom: none !important;
-	}
-
-</style>
-
+    /* Top nav (shared) */
+    .topnav{
+      position: sticky; top: 0; z-index: 1000;
+      display:flex; gap:10px; align-items:center;
+      background:#fff; border-bottom:1px solid var(--border);
+      padding:10px 12px; margin:-16px -16px 16px -16px; /* stretch edge-to-edge */
+    }
+    .topnav a{
+      text-decoration:none; color:#334155; padding:6px 10px;
+      border-radius:6px; font-weight:500;
+    }
+    .topnav a:hover{ background:#f1f5f9; }
+    .topnav a.active{ background:#111827; color:#fff; }
+  </style>
+</head>
 <body>
-  <header class="topbar">
-    <a href="index.html" class="home-btn" title="Go to Home">← Home</a>
-  </header>
+
+  <!-- Shared top navigation -->
+  <div class="topnav">
+    <a href="./">Home</a>
+    <a href="clusters.html?dataset=table1">Clusters</a>
+    <a href="themes.html?dataset=table2">Themes</a>
+    <a href="classification.html?dataset=table3">Classification</a>
+    <a href="authors.html?dataset=table4">Authors</a>
+  </div>
 
   <h1>Cluster Theme Classification</h1>
 
   <div class="controls">
     <input id="search" type="text" placeholder="Type to search">
-    <select id="page-size">
-      <option value="10">10 rows</option>
-      <option value="25">25 rows</option>
-      <option value="50">50 rows</option>
-      <option value="100">100 rows</option>
-    </select>
     <button id="download-xlsx">Download Excel</button>
     <button id="download-csv">Download CSV</button>
     <button id="clear">Clear filters</button>
@@ -74,10 +76,22 @@
   <div id="table"></div>
 
 <script>
+/* highlight current page link in the top nav */
+(function(){
+  const norm = u => (u || "").split('?')[0].replace('./','') || 'index.html';
+  const current = norm(location.pathname.split('/').pop());
+  document.querySelectorAll('.topnav a').forEach(a => {
+    const target = norm(a.getAttribute('href'));
+    if (current === target || (current === 'index.html' && (target === '' || target === './'))) {
+      a.classList.add('active');
+    }
+  });
+})();
+
 // columns expect JSON keys: cluster_id, theme_id, explanation, title, abstract
 const columns = [
-  {title:"Cluster ID", field:"cluster_id", sorter:"number", headerFilter:"input", width:110, hozAlign:"center"},
-  {title:"Theme ID",   field:"theme_id",   sorter:"number", headerFilter:"input", width:110, hozAlign:"center"},
+  {title:"Cluster ID", field:"cluster_id", sorter:"number", headerFilter:"input", width:110, hozAlign:"center", headerHozAlign:"center"},
+  {title:"Theme ID",   field:"theme_id",   sorter:"number", headerFilter:"input", width:110, hozAlign:"center", headerHozAlign:"center"},
   {
     title:"Explanation",
     field:"explanation",
@@ -111,14 +125,12 @@ const columns = [
 ];
 
 const table = new Tabulator("#table", {
-  height:"700px",
+  // No fixed height -> no internal scroll; page itself will scroll
   layout:"fitDataStretch",
   ajaxURL:"aus_classification.json", // set to your exported JSON file
-  pagination:true,
-  paginationSize:10,
-  paginationSizeSelector:[10,25,50,100],
+  pagination:false,                  // show all rows (no pager)
   columns,
-  rowHeight:64,          // compact rows (tweak as you like)
+  rowHeight:64,          // compact rows (tweak as needed)
   variableHeight:false,  // keep rows fixed-height; long text is clamped
   columnDefaults:{ vertAlign:"top" }
 });
@@ -130,11 +142,6 @@ searchInput.addEventListener("input", () => {
   if (!q) { table.clearFilter(true); return; }
   const fields = columns.map(c => c.field);
   table.setFilter(fields.map(f => ({field:f, type:"like", value:q})), "or");
-});
-
-// page size
-document.getElementById("page-size").addEventListener("change", e => {
-  table.setPageSize(parseInt(e.target.value,10));
 });
 
 // downloads
