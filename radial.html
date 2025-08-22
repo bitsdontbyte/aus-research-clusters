@@ -34,10 +34,14 @@
     color: #007acc;
   }
   
-  .topnav a.active {
-  color: black;
-  font-weight: bold;
+	.topnav a.active {
+	  background-color: #111;
+	  color: white;
+	  font-weight: bold;
+	  padding: 4px 10px;
+	  border-radius: 8px;
 	}
+
   .spacer {
     flex: 1;
   }
@@ -76,6 +80,20 @@
   <a href="classification.html?dataset=table3">Classification</a>
   <a href="authors.html?dataset=table4">Authors</a>
 </div>
+
+<script>
+  const current = window.location.pathname.split('/').pop() || 'index.html';
+
+  document.querySelectorAll('.topnav a').forEach(link => {
+    const href = link.getAttribute('href');
+    const target = href.split('/').pop() || 'index.html';
+
+    if (target === current) {
+      link.classList.add('active');
+    }
+  });
+</script>
+
 
 <!-- Controls bar with slider + download button -->
 <div class="controls">
