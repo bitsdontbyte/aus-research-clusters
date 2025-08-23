@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>AUS Research Clusters — 1/1/2022 - 15/8/2025</title>
 
-  <!-- Optional libs (match other pages) -->
   <link href="https://unpkg.com/tabulator-tables@5.6.0/dist/css/tabulator.min.css" rel="stylesheet">
   <script src="https://unpkg.com/tabulator-tables@5.6.0/dist/js/tabulator.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -13,41 +12,26 @@
   <style>
     :root { --bg:#fff; --fg:#111; --muted:#6b7280; --border:#e5e7eb; }
     body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; background:var(--bg); color:var(--fg); }
-    /* Topnav */
     .topnav {
-      position: sticky;
-      top: 0;
-      background: #fff;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      gap: 16px;
-      padding: 10px 16px;
-      z-index: 2000;
+      position: sticky; top: 0; background: #fff; border-bottom: 1px solid var(--border);
+      display: flex; gap: 16px; padding: 10px 16px; z-index: 2000;
     }
-    .topnav a {
-      text-decoration: none;
-      color: #111;
-      font-size: 14px;
-      font-weight: 500;
-    }
+    .topnav a { text-decoration: none; color: #111; font-size: 14px; font-weight: 500; }
     .topnav a:hover { color: #007acc; }
     .topnav a.active {
-      background-color: #111;
-      color: white;
-      font-weight: bold;
-      padding: 4px 10px;
-      border-radius: 8px;
+      background-color: #111; color: white; font-weight: bold; padding: 4px 10px; border-radius: 8px;
     }
-
     .controls { padding: 14px; background: #f9fafb; border-bottom: 1px solid var(--border); }
     .controls label { margin-right: 20px; font-size: 14px; }
     .controls select, .controls input {
       margin-left: 8px; padding: 4px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 16px;
     }
-
-    /* Popup styles */
-    .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; }
-    .popup-content { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border-radius: 8px; padding: 15px; max-width: 70%; max-height: 85%; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 1001; font-size: 11px; }
+    .popup-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; }
+    .popup-content {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      background: white; border-radius: 8px; padding: 15px; max-width: 70%; max-height: 85%;
+      overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 1001; font-size: 11px;
+    }
     .popup-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
     .popup-title { font-size: 14px; font-weight: bold; color: #333; }
     .popup-close { background: none; border: none; font-size: 20px; cursor: pointer; color: #666; }
@@ -66,463 +50,433 @@
   <div class="topnav">
     <a href="./">Home</a>
     <a href="clusters.html">Clusters</a>
-	<a href="radial.html">Radial Clusters</a>
+    <a href="radial.html">Radial Clusters</a>
     <a href="themes.html">Themes</a>
     <a href="classification.html">Classification</a>
     <a href="authors.html">Authors</a>
   </div>
 
-<script>
-  // Get current path (ignores domain)
-  const current = window.location.pathname.split('/').pop() || 'index.html';
+  <script>
+    // Active link highlight (handles ./, index.html, and query strings)
+    (function () {
+      const current = (location.pathname.split('/').pop() || 'index.html').split('?')[0];
+      document.querySelectorAll('.topnav a').forEach(a => {
+        const href = (a.getAttribute('href') || '').split('?')[0];
+        const target = (href.split('/').pop() || 'index.html');
+        if (target === current || (href === './' && (current === '' || current === 'index.html'))) {
+          a.classList.add('active');
+        }
+      });
+    })();
+  </script>
 
-  document.querySelectorAll('.topnav a').forEach(link => {
-    const href = link.getAttribute('href');
-
-    // Normalize both to compare file names only
-    const target = href.split('/').pop() || 'index.html';
-
-    if (target === current) {
-      link.classList.add('active');
-    }
-  });
-</script>
-
-
-<div class="controls">
-  <label>
-    Layout:
-    <select id="layoutSelect">
-      <option value="tree">Tree (Left-to-Right)</option>
-      <option value="cluster">Cluster</option>
-    </select>
-  </label>
-  <label>
-    Min Papers:
-    <input type="number" id="minPapers" value="1" min="1" max="50">
-  </label>
-  <button onclick="updateVisualization()">Update</button>
-</div>
-
-<!-- Popup for publications -->
-<div class="popup-overlay" id="popupOverlay">
-  <div class="popup-content">
-    <div class="popup-header">
-      <div class="popup-title" id="popupTitle">Author Publications</div>
-      <button class="popup-close" onclick="closePopup()">&times;</button>
-    </div>
-    <div id="popupBody"></div>
+  <div class="controls">
+    <label>
+      Layout:
+      <select id="layoutSelect">
+        <option value="tree">Tree (Left-to-Right)</option>
+        <option value="cluster">Cluster</option>
+      </select>
+    </label>
+    <label>
+      Min Papers:
+      <input type="number" id="minPapers" value="1" min="1" max="50">
+    </label>
+    <button onclick="updateVisualization()">Update</button>
   </div>
-</div>
 
-<div id="mount"></div>
+  <div class="popup-overlay" id="popupOverlay">
+    <div class="popup-content">
+      <div class="popup-header">
+        <div class="popup-title" id="popupTitle">Author Publications</div>
+        <button class="popup-close" onclick="closePopup()">&times;</button>
+      </div>
+      <div id="popupBody"></div>
+    </div>
+  </div>
 
-<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-<script>
-let rawData = null;
-let currentLayout = 'tree';
-let minPapers = 1;
+  <div id="mount"></div>
 
-// Popup functions
-function showAuthorPublications(authorData) {
-  const popupTitle = document.getElementById('popupTitle');
-  const popupBody = document.getElementById('popupBody');
-  const popupOverlay = document.getElementById('popupOverlay');
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script>
+    let rawData = null;
+    let currentLayout = 'tree';
+    let minPapers = 1;
 
-  popupTitle.textContent = `${authorData.name} - Publications`;
+    function showAuthorPublications(authorData) {
+      const popupTitle = document.getElementById('popupTitle');
+      const popupBody = document.getElementById('popupBody');
+      const popupOverlay = document.getElementById('popupOverlay');
 
-  if (!authorData.all_publications || !Array.isArray(authorData.all_publications)) {
-    popupBody.innerHTML = `
-      <div style="color: #666; font-size: 11px;">
-        <strong>Author:</strong> ${authorData.name}<br>
-        <strong>Department:</strong> ${authorData.department || 'Unknown'}<br>
-        <strong>Papers in this theme:</strong> ${authorData.dominant_papers || 0}<br>
-        <strong>Total papers:</strong> ${authorData.value || 0}<br><br>
-        <div style="color: #ff6b35;">Publication details are not available. Please regenerate the data.</div>
-      </div>`;
-    popupOverlay.style.display = 'block';
-    return;
-  }
+      popupTitle.textContent = `${authorData.name} - Publications`;
 
-  // Use the complete cluster-theme mapping from the JSON
-  let clusterThemeMap = {};
-  if (rawData && rawData.complete_cluster_theme_mapping) {
-    clusterThemeMap = rawData.complete_cluster_theme_mapping;
-  } else if (rawData && rawData.children) {
-    rawData.children.forEach(cluster => {
-      (cluster.children || []).forEach(theme => {
-        const clusterIdInt = parseInt(cluster.id);
-        const themeIdInt = parseInt(theme.id);
-        const mapping = {
-          cluster_id: cluster.id,
-          cluster_name: cluster.name.replace(/^\d+:\s*/, ''),
-          theme_id: theme.id,
-          theme_name: theme.name.replace(/^Theme \d+:\s*/, '')
-        };
-        clusterThemeMap[`${cluster.id}_${theme.id}`] = mapping;
-        clusterThemeMap[`${clusterIdInt}_${themeIdInt}`] = mapping;
+      if (!authorData.all_publications || !Array.isArray(authorData.all_publications)) {
+        popupBody.innerHTML = `
+          <div style="color: #666; font-size: 11px;">
+            <strong>Author:</strong> ${authorData.name}<br>
+            <strong>Department:</strong> ${authorData.department || 'Unknown'}<br>
+            <strong>Papers in this theme:</strong> ${authorData.dominant_papers || 0}<br>
+            <strong>Total papers:</strong> ${authorData.value || 0}<br><br>
+            <div style="color: #ff6b35;">Publication details are not available. Please regenerate the data.</div>
+          </div>`;
+        popupOverlay.style.display = 'block';
+        return;
+      }
+
+      let clusterThemeMap = {};
+      if (rawData && rawData.complete_cluster_theme_mapping) {
+        clusterThemeMap = rawData.complete_cluster_theme_mapping;
+      } else if (rawData && rawData.children) {
+        rawData.children.forEach(cluster => {
+          (cluster.children || []).forEach(theme => {
+            const clusterIdInt = parseInt(cluster.id);
+            const themeIdInt = parseInt(theme.id);
+            const mapping = {
+              cluster_id: cluster.id,
+              cluster_name: cluster.name.replace(/^\d+:\s*/, ''),
+              theme_id: theme.id,
+              theme_name: theme.name.replace(/^Theme \d+:\s*/, '')
+            };
+            clusterThemeMap[`${cluster.id}_${theme.id}`] = mapping;
+            clusterThemeMap[`${clusterIdInt}_${themeIdInt}`] = mapping;
+          });
+        });
+      }
+
+      const pubsByYear = {};
+      authorData.all_publications.forEach(pub => {
+        const year = pub.year || 'Unknown';
+        if (!pubsByYear[year]) pubsByYear[year] = [];
+        pubsByYear[year].push(pub);
       });
-    });
-  }
 
-  // Group publications by year
-  const pubsByYear = {};
-  authorData.all_publications.forEach(pub => {
-    const year = pub.year || 'Unknown';
-    if (!pubsByYear[year]) pubsByYear[year] = [];
-    pubsByYear[year].push(pub);
-  });
-
-  const sortedYears = Object.keys(pubsByYear).sort((a, b) => {
-    if (a === 'Unknown') return 1;
-    if (b === 'Unknown') return -1;
-    return parseInt(b) - parseInt(a);
-  });
-
-  let html = `<div style="margin-bottom: 8px; color: #666; font-size: 10px;">
-    <strong>Total:</strong> ${authorData.all_publications.length} |
-    <strong>This theme:</strong> ${authorData.theme_publications ? authorData.theme_publications.length : 0} |
-    <strong>Dept:</strong> ${authorData.department}
-  </div>`;
-
-  sortedYears.forEach(year => {
-    html += `<div style="margin-bottom: 12px;">
-      <h4 class="publication-year">${year} (${pubsByYear[year].length})</h4>`;
-
-    pubsByYear[year].forEach(pub => {
-      const isInThisTheme = authorData.theme_publications &&
-                           authorData.theme_publications.some(tp => tp.scopus_id === pub.scopus_id);
-      const highlight = isInThisTheme ? 'border-left-color: #ff6b35; background: #fff3f0;' : '';
-
-      const possibleKeys = [
-        `${pub.cluster_id}_${pub.theme_id}`,
-        `${parseInt(pub.cluster_id)}_${parseInt(pub.theme_id)}`
-      ];
-
-      let clusterThemeInfo = null;
-      for (const key of possibleKeys) {
-        if (clusterThemeMap[key]) { clusterThemeInfo = clusterThemeMap[key]; break; }
-      }
-
-      html += `<div class="publication-item" style="${highlight}">
-        <div class="publication-title">${pub.title}</div>
-        <div class="publication-meta">
-          ID: ${pub.scopus_id}
-          ${isInThisTheme ? ' <span style="color: #ff6b35; font-weight: bold;">(Current)</span>' : ''}
-        </div>`;
-
-      if (clusterThemeInfo) {
-        html += `<div class="cluster-theme-info">
-          📂 ${clusterThemeInfo.cluster_name} → ${clusterThemeInfo.theme_name}
-        </div>`;
-      } else {
-        html += `<div class="cluster-theme-info" style="color: #999;">
-          📂 Cluster ${pub.cluster_id} → Theme ${pub.theme_id} (not found)
-        </div>`;
-      }
-
-      html += `</div>`;
-    });
-
-    html += '</div>';
-  });
-
-  popupBody.innerHTML = html;
-  popupOverlay.style.display = 'block';
-}
-
-function closePopup() {
-  document.getElementById('popupOverlay').style.display = 'none';
-}
-document.getElementById('popupOverlay').addEventListener('click', function(e) {
-  if (e.target === this) closePopup();
-});
-
-// Load data and initialize
-const timestamp = new Date().getTime();
-fetch(`./clusters.json?v=${timestamp}`)
-  .then(r => r.json())
-  .then(data => {
-    rawData = data;
-    updateVisualization();
-  })
-  .catch(err => {
-    document.getElementById("mount").innerHTML = `
-      <div style="padding: 20px; text-align: center;">
-        <h3>Error loading data</h3>
-        <p>Make sure clusters.json is available and valid.</p>
-        <p>Error: ${err.message}</p>
-        <button onclick="location.reload()">Reload Page</button>
-      </div>`;
-  });
-
-function updateVisualization() {
-  const layoutSelect = document.getElementById('layoutSelect');
-  const minPapersInput = document.getElementById('minPapers');
-
-  currentLayout = layoutSelect.value;
-  minPapers = parseInt(minPapersInput.value) || 1;
-
-  document.getElementById("mount").innerHTML = "";
-
-  if (currentLayout === 'tree') {
-    renderTreeVisualization();
-  } else {
-    renderClusterVisualization();
-  }
-}
-
-function filterDataByMinPapers(data) {
-  const filtered = JSON.parse(JSON.stringify(data)); // Deep clone
-
-  filtered.children = (filtered.children || []).map(cluster => {
-    cluster.children = (cluster.children || []).map(theme => {
-      theme.children = (theme.children || []).filter(author => {
-        const papersInThisTheme = author.dominant_papers || 0;
-        return papersInThisTheme >= minPapers;
+      const sortedYears = Object.keys(pubsByYear).sort((a, b) => {
+        if (a === 'Unknown') return 1;
+        if (b === 'Unknown') return -1;
+        return parseInt(b) - parseInt(a);
       });
-      return theme;
-    }).filter(theme => theme.children.length > 0);
-    return cluster;
-  }).filter(cluster => cluster.children.length > 0);
 
-  return filtered;
-}
+      let html = `<div style="margin-bottom: 8px; color: #666; font-size: 10px;">
+        <strong>Total:</strong> ${authorData.all_publications.length} |
+        <strong>This theme:</strong> ${authorData.theme_publications ? authorData.theme_publications.length : 0} |
+        <strong>Dept:</strong> ${authorData.department}
+      </div>`;
 
-function renderTreeVisualization() {
-  const filteredData = filterDataByMinPapers(rawData);
+      sortedYears.forEach(year => {
+        html += `<div style="margin-bottom: 12px;">
+          <h4 class="publication-year">${year} (${pubsByYear[year].length})</h4>`;
 
-  const clusters = filteredData.children || [];
-  const palette = d3.schemeTableau10.concat(d3.schemeSet3 || []);
-  const color = d3.scaleOrdinal(clusters.map(d => d.id), palette.slice(0, clusters.length));
+        pubsByYear[year].forEach(pub => {
+          const isInThisTheme = authorData.theme_publications &&
+                              authorData.theme_publications.some(tp => tp.scopus_id === pub.scopus_id);
+          const highlight = isInThisTheme ? 'border-left-color: #ff6b35; background: #fff3f0;' : '';
 
-  const containerDiv = document.createElement("div");
-  containerDiv.style.display = "flex";
-  containerDiv.style.flexDirection = "column";
-  containerDiv.style.gap = "20px";
-  containerDiv.style.padding = "20px";
+          const possibleKeys = [
+            `${pub.cluster_id}_${pub.theme_id}`,
+            `${parseInt(pub.cluster_id)}_${parseInt(pub.theme_id)}`
+          ];
 
-  clusters.forEach((cluster) => {
-    const clusterTreeData = {
-      name: cluster.name,
-      type: 'cluster',
-      id: cluster.id,
-      cluster_id: cluster.id,
-      children: cluster.children || []
-    };
-
-    const root = d3.hierarchy(clusterTreeData);
-
-    // *** CHANGE: Sort authors inside each theme by papers IN THIS THEME (descending) ***
-    root.sort((a, b) => {
-      // order: cluster < theme < author
-      const typeOrder = { 'cluster': 1, 'theme': 2, 'author': 3 };
-      const aType = typeOrder[a.data.type] || 4;
-      const bType = typeOrder[b.data.type] || 4;
-      if (aType !== bType) return d3.ascending(aType, bType);
-
-      // for authors, sort by theme-specific count
-      if (a.data.type === 'author' && b.data.type === 'author') {
-        const aCount = (a.data.dominant_papers != null)
-                         ? a.data.dominant_papers
-                         : ((a.data.theme_publications && a.data.theme_publications.length) || 0);
-        const bCount = (b.data.dominant_papers != null)
-                         ? b.data.dominant_papers
-                         : ((b.data.theme_publications && b.data.theme_publications.length) || 0);
-        const byCount = d3.descending(aCount, bCount);
-        return byCount !== 0 ? byCount : d3.ascending((a.data.name||''), (b.data.name||'')); // tie-break by name
-      }
-
-      return d3.ascending((a.data.name||''), (b.data.name||''));
-    });
-
-    const treeWidth = 2200;
-    const dx = 25;
-    const tree = d3.tree().nodeSize([dx, treeWidth / (root.height + 1)]);
-    tree(root);
-
-    let x0 = Infinity, x1 = -x0;
-    root.each(d => { if (d.x > x1) x1 = d.x; if (d.x < x0) x0 = d.x; });
-    const height = x1 - x0 + dx * 2;
-
-    const svg = d3.create("svg")
-      .attr("width", treeWidth)
-      .attr("height", height)
-      .attr("viewBox", [-80, x0 - dx, treeWidth, height])
-      .attr("style", "max-width: 100%; height: auto; font: 14px system-ui, -apple-system, Segoe UI, Roboto, Arial;");
-
-    svg.append("g")
-      .attr("fill", "none")
-      .attr("stroke-opacity", 0.5)
-      .attr("stroke-width", 2)
-      .selectAll("path")
-      .data(root.links())
-      .join("path")
-        .attr("stroke", color(cluster.id))
-        .attr("d", d3.linkHorizontal().x(d => d.y).y(d => d.x));
-
-    const node = svg.append("g")
-      .attr("stroke-linejoin", "round")
-      .attr("stroke-width", 4)
-      .selectAll("g")
-      .data(root.descendants())
-      .join("g")
-        .attr("transform", d => `translate(${d.y},${d.x})`)
-        .style("cursor", d => d.data.type === 'author' ? 'pointer' : 'default')
-        .on("click", function(event, d) {
-          if (d.data.type === 'author') {
-            event.stopPropagation();
-            showAuthorPublications(d.data);
+          let clusterThemeInfo = null;
+          for (const key of possibleKeys) {
+            if (clusterThemeMap[key]) { clusterThemeInfo = clusterThemeMap[key]; break; }
           }
+
+          html += `<div class="publication-item" style="${highlight}">
+            <div class="publication-title">${pub.title}</div>
+            <div class="publication-meta">
+              ID: ${pub.scopus_id}
+              ${isInThisTheme ? ' <span style="color: #ff6b35; font-weight: bold;">(Current)</span>' : ''}
+            </div>`;
+
+          if (clusterThemeInfo) {
+            html += `<div class="cluster-theme-info">
+              📂 ${clusterThemeInfo.cluster_name} → ${clusterThemeInfo.theme_name}
+            </div>`;
+          } else {
+            html += `<div class="cluster-theme-info" style="color: #999;">
+              📂 Cluster ${pub.cluster_id} → Theme ${pub.theme_id} (not found)
+            </div>`;
+          }
+
+          html += `</div>`;
         });
 
-    node.append("circle")
-      .attr("r", d => d.data.type === 'cluster' ? 8 : (d.data.type === 'theme' ? 5 : 3))
-      .attr("fill", d => {
-        if (d.data.type === 'cluster') return color(cluster.id);
-        if (d.data.type === 'theme') return d3.color(color(cluster.id)).darker(0.5);
-        return d3.color(color(cluster.id)).darker(1);
-      })
-      .attr("stroke", "white");
-
-    node.append("text")
-      .attr("dy", "0.31em")
-      .attr("x", d => (d.data.type === 'cluster' ? 15 : (d.data.type === 'theme' ? 12 : 20)))
-      .attr("text-anchor", "start")
-      .attr("stroke", "white")
-      .attr("stroke-width", d => d.data.type === 'author' ? 3 : 4)
-      .attr("paint-order", "stroke")
-      .style("font-weight", d => (d.data.type === 'cluster' ? 700 : (d.data.type === 'theme' ? 600 : 400)))
-      .style("font-size", d => (d.data.type === 'cluster' ? "24px" : (d.data.type === 'theme' ? "18px" : "18px")))
-      .style("fill", "black")
-      .text(d => {
-        if (d.data.type === 'cluster') return d.data.name;
-        if (d.data.type === 'theme') return (d.data.name || '').replace(/^Theme \d+: /, '');
-        return d.data.name;
-      })
-      .each(function(d) {
-        const text = d3.select(this);
-        const maxLength = d.data.type === 'cluster' ? 70 : (d.data.type === 'theme' ? 50 : 40);
-        const currentText = text.text();
-        if (currentText.length > maxLength) text.text(currentText.substring(0, maxLength) + "...");
+        html += '</div>';
       });
 
-    containerDiv.appendChild(svg.node());
-  });
+      popupBody.innerHTML = html;
+      popupOverlay.style.display = 'block';
+    }
 
-  document.getElementById("mount").appendChild(containerDiv);
-}
+    function closePopup() { document.getElementById('popupOverlay').style.display = 'none'; }
+    document.getElementById('popupOverlay').addEventListener('click', function(e) {
+      if (e.target === this) closePopup();
+    });
 
-function renderClusterVisualization() {
-  const filteredData = filterDataByMinPapers(rawData);
-  const clusters = filteredData.children || [];
-  const palette = d3.schemeTableau10.concat(d3.schemeSet3 || []);
-  const color = d3.scaleOrdinal(clusters.map(d => d.id), palette.slice(0, clusters.length));
+    const timestamp = Date.now();
+    fetch(`./clusters.json?v=${timestamp}`)
+      .then(r => r.json())
+      .then(data => { rawData = data; updateVisualization(); })
+      .catch(err => {
+        document.getElementById("mount").innerHTML = `
+          <div style="padding: 20px; text-align: center;">
+            <h3>Error loading data</h3>
+            <p>Make sure clusters.json is available and valid.</p>
+            <p>Error: ${err.message}</p>
+            <button onclick="location.reload()">Reload Page</button>
+          </div>`;
+      });
 
-  const containerDiv = document.createElement("div");
-  containerDiv.style.display = "flex";
-  containerDiv.style.flexDirection = "column";
-  containerDiv.style.gap = "20px";
-  containerDiv.style.padding = "20px";
+    function updateVisualization() {
+      const layoutSelect = document.getElementById('layoutSelect');
+      const minPapersInput = document.getElementById('minPapers');
 
-  clusters.forEach((cluster) => {
-    const nodes = [];
-    const links = [];
+      currentLayout = layoutSelect.value;
+      minPapers = parseInt(minPapersInput.value) || 1;
 
-    nodes.push({ id:`cluster_${cluster.id}`, name:cluster.name, type:'cluster', cluster_id:cluster.id });
+      document.getElementById("mount").innerHTML = "";
 
-    (cluster.children || []).forEach(theme => {
-      const themeId = `theme_${theme.id}`;
-      nodes.push({ id:themeId, name:theme.name, type:'theme', cluster_id:cluster.id, theme_id:theme.id });
-      links.push({ source:`cluster_${cluster.id}`, target:themeId });
+      if (currentLayout === 'tree') renderTreeVisualization();
+      else renderClusterVisualization();
+    }
 
-      (theme.children || []).forEach(author => {
-        const authorId = `author_${author.author_id}_${theme.id}`;
-        nodes.push({
-          id: authorId,
-          name: author.name,
-          type: 'author',
-          cluster_id: cluster.id,
-          theme_id: theme.id,
-          value: author.value, // keeping as-is
-          all_publications: author.all_publications,
-          theme_publications: author.theme_publications,
-          department: author.department,
-          dominant_papers: author.dominant_papers
+    function filterDataByMinPapers(data) {
+      const filtered = JSON.parse(JSON.stringify(data));
+      filtered.children = (filtered.children || []).map(cluster => {
+        cluster.children = (cluster.children || []).map(theme => {
+          theme.children = (theme.children || []).filter(author => {
+            const v = author.dominant_papers || 0;
+            return v >= minPapers;
+          });
+          return theme;
+        }).filter(theme => theme.children.length > 0);
+        return cluster;
+      }).filter(cluster => cluster.children.length > 0);
+      return filtered;
+    }
+
+    function renderTreeVisualization() {
+      const filteredData = filterDataByMinPapers(rawData);
+      const clusters = filteredData.children || [];
+      const palette = d3.schemeTableau10.concat(d3.schemeSet3 || []);
+      const color = d3.scaleOrdinal(clusters.map(d => d.id), palette.slice(0, clusters.length));
+
+      const containerDiv = document.createElement("div");
+      containerDiv.style.display = "flex";
+      containerDiv.style.flexDirection = "column";
+      containerDiv.style.gap = "20px";
+      containerDiv.style.padding = "20px";
+
+      clusters.forEach((cluster) => {
+        const clusterTreeData = {
+          name: cluster.name, type: 'cluster', id: cluster.id, cluster_id: cluster.id,
+          children: cluster.children || []
+        };
+
+        const root = d3.hierarchy(clusterTreeData);
+
+        root.sort((a, b) => {
+          const typeOrder = { 'cluster': 1, 'theme': 2, 'author': 3 };
+          const aType = typeOrder[a.data.type] || 4;
+          const bType = typeOrder[b.data.type] || 4;
+          if (aType !== bType) return d3.ascending(aType, bType);
+
+          if (a.data.type === 'author' && b.data.type === 'author') {
+            const aCount = (a.data.dominant_papers != null)
+                             ? a.data.dominant_papers
+                             : ((a.data.theme_publications && a.data.theme_publications.length) || 0);
+            const bCount = (b.data.dominant_papers != null)
+                             ? b.data.dominant_papers
+                             : ((b.data.theme_publications && b.data.theme_publications.length) || 0);
+            const byCount = d3.descending(aCount, bCount);
+            return byCount !== 0 ? byCount : d3.ascending((a.data.name||''), (b.data.name||''));
+          }
+          return d3.ascending((a.data.name||''), (b.data.name||''));
         });
-        links.push({ source: themeId, target: authorId });
+
+        const treeWidth = 2200;
+        const dx = 25;
+        const tree = d3.tree().nodeSize([dx, treeWidth / (root.height + 1)]);
+        tree(root);
+
+        let x0 = Infinity, x1 = -x0;
+        root.each(d => { if (d.x > x1) x1 = d.x; if (d.x < x0) x0 = d.x; });
+        const height = x1 - x0 + dx * 2;
+
+        const svg = d3.create("svg")
+          .attr("width", treeWidth)
+          .attr("height", height)
+          .attr("viewBox", [-80, x0 - dx, treeWidth, height])
+          .attr("style", "max-width: 100%; height: auto; font: 14px system-ui, -apple-system, Segoe UI, Roboto, Arial;");
+
+        svg.append("g")
+          .attr("fill", "none")
+          .attr("stroke-opacity", 0.5)
+          .attr("stroke-width", 2)
+          .selectAll("path")
+          .data(root.links())
+          .join("path")
+            .attr("stroke", color(cluster.id))
+            .attr("d", d3.linkHorizontal().x(d => d.y).y(d => d.x));
+
+        const node = svg.append("g")
+          .attr("stroke-linejoin", "round")
+          .attr("stroke-width", 4)
+          .selectAll("g")
+          .data(root.descendants())
+          .join("g")
+            .attr("transform", d => `translate(${d.y},${d.x})`)
+            .style("cursor", d => d.data.type === 'author' ? 'pointer' : 'default')
+            .on("click", function(event, d) {
+              if (d.data.type === 'author') {
+                event.stopPropagation();
+                showAuthorPublications(d.data);
+              }
+            });
+
+        node.append("circle")
+          .attr("r", d => d.data.type === 'cluster' ? 8 : (d.data.type === 'theme' ? 5 : 3))
+          .attr("fill", d => {
+            if (d.data.type === 'cluster') return color(cluster.id);
+            if (d.data.type === 'theme') return d3.color(color(cluster.id)).darker(0.5);
+            return d3.color(color(cluster.id)).darker(1);
+          })
+          .attr("stroke", "white");
+
+        node.append("text")
+          .attr("dy", "0.31em")
+          .attr("x", d => (d.data.type === 'cluster' ? 15 : (d.data.type === 'theme' ? 12 : 20)))
+          .attr("text-anchor", "start")
+          .attr("stroke", "white")
+          .attr("stroke-width", d => d.data.type === 'author' ? 3 : 4)
+          .attr("paint-order", "stroke")
+          .style("font-weight", d => (d.data.type === 'cluster' ? 700 : (d.data.type === 'theme' ? 600 : 400)))
+          .style("font-size", d => (d.data.type === 'cluster' ? "24px" : (d.data.type === 'theme' ? "18px" : "18px")))
+          .style("fill", "black")
+          .text(d => {
+            if (d.data.type === 'cluster') return d.data.name;
+            if (d.data.type === 'theme') return (d.data.name || '').replace(/^Theme \d+: /, '');
+            return d.data.name;
+          })
+          .each(function(d) {
+            const text = d3.select(this);
+            const maxLength = d.data.type === 'cluster' ? 70 : (d.data.type === 'theme' ? 50 : 40);
+            const currentText = text.text();
+            if (currentText.length > maxLength) text.text(currentText.substring(0, maxLength) + "...");
+          });
+
+        containerDiv.appendChild(svg.node());
       });
-    });
 
-    const width = 1400, height = 600;
-    const svg = d3.create("svg").attr("width", width).attr("height", height).attr("viewBox", [0,0,width,height]).attr("style","max-width:100%; height:auto;");
+      document.getElementById("mount").appendChild(containerDiv);
+    }
 
-    const simulation = d3.forceSimulation(nodes)
-      .force("link", d3.forceLink(links).id(d => d.id).distance(d => d.source.type === 'cluster' ? 150 : 100))
-      .force("charge", d3.forceManyBody().strength(d => d.type === 'cluster' ? -1000 : (d.type === 'theme' ? -500 : -200)))
-      .force("center", d3.forceCenter(width/2, height/2))
-      .force("collision", d3.forceCollide().radius(d => d.type === 'cluster' ? 30 : (d.type === 'theme' ? 25 : 20)));
+    function renderClusterVisualization() {
+      const filteredData = filterDataByMinPapers(rawData);
+      const clusters = filteredData.children || [];
+      const palette = d3.schemeTableau10.concat(d3.schemeSet3 || []);
+      const color = d3.scaleOrdinal(clusters.map(d => d.id), palette.slice(0, clusters.length));
 
-    const link = svg.append("g")
-      .attr("stroke", color(cluster.id))
-      .attr("stroke-opacity", 0.4)
-      .selectAll("line")
-      .data(links)
-      .join("line")
-      .attr("stroke-width", 2);
+      const containerDiv = document.createElement("div");
+      containerDiv.style.display = "flex";
+      containerDiv.style.flexDirection = "column";
+      containerDiv.style.gap = "20px";
+      containerDiv.style.padding = "20px";
 
-    const node = svg.append("g")
-      .selectAll("g")
-      .data(nodes)
-      .join("g")
-      .style("cursor", d => d.type === 'author' ? 'pointer' : 'default')
-      .on("click", function(event, d){
-        if (d.type === 'author') { event.stopPropagation(); showAuthorPublications(d); }
-      })
-      .call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
+      clusters.forEach((cluster) => {
+        const nodes = [];
+        const links = [];
 
-    node.append("circle")
-      .attr("r", d => d.type === 'cluster' ? 20 : (d.type === 'theme' ? 15 : Math.max(8, Math.sqrt(d.value || 1) * 3)))
-      .attr("fill", d => d.type === 'cluster' ? color(cluster.id) : (d.type === 'theme' ? d3.color(color(cluster.id)).darker(0.5) : d3.color(color(cluster.id)).darker(1)))
-      .attr("stroke", "white")
-      .attr("stroke-width", 3);
+        nodes.push({ id:`cluster_${cluster.id}`, name:cluster.name, type:'cluster', cluster_id:cluster.id });
 
-    node.append("text")
-      .attr("text-anchor", "middle")
-      .attr("dy", "0.35em")
-      .style("font-size", d => d.type === 'cluster' ? "24px" : (d.type === 'theme' ? "20px" : "24px"))
-      .style("font-weight", d => d.type === 'cluster' ? 700 : 400)
-      .style("fill", d => d.type === 'author' ? '#007acc' : 'white')
-      .style("stroke", "black")
-      .style("stroke-width", "0.5px")
-      .style("paint-order", "stroke")
-      .style("text-decoration", d => d.type === 'author' ? 'underline' : 'none')
-      .text(d => {
-        let text = d.name;
-        if (d.type === 'theme') text = text.replace(/^Theme \d+: /, '');
-        const maxLength = d.type === 'author' ? 25 : 30;
-        return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
+        (cluster.children || []).forEach(theme => {
+          const themeId = `theme_${theme.id}`;
+          nodes.push({ id:themeId, name:theme.name, type:'theme', cluster_id:cluster.id, theme_id:theme.id });
+          links.push({ source:`cluster_${cluster.id}`, target:themeId });
+
+          (theme.children || []).forEach(author => {
+            const authorId = `author_${author.author_id}_${theme.id}`;
+            nodes.push({
+              id: authorId, name: author.name, type: 'author',
+              cluster_id: cluster.id, theme_id: theme.id, value: author.value,
+              all_publications: author.all_publications, theme_publications: author.theme_publications,
+              department: author.department, dominant_papers: author.dominant_papers
+            });
+            links.push({ source: themeId, target: authorId });
+          });
+        });
+
+        const width = 1400, height = 600;
+        const svg = d3.create("svg").attr("width", width).attr("height", height).attr("viewBox", [0,0,width,height]).attr("style","max-width:100%; height:auto;");
+
+        const simulation = d3.forceSimulation(nodes)
+          .force("link", d3.forceLink(links).id(d => d.id).distance(d => d.source.type === 'cluster' ? 150 : 100))
+          .force("charge", d3.forceManyBody().strength(d => d.type === 'cluster' ? -1000 : (d.type === 'theme' ? -500 : -200)))
+          .force("center", d3.forceCenter(width/2, height/2))
+          .force("collision", d3.forceCollide().radius(d => d.type === 'cluster' ? 30 : (d.type === 'theme' ? 25 : 20)));
+
+        const link = svg.append("g")
+          .attr("stroke", color(clusters[0]?.id))  /* optional: use per-cluster if splitting renders */
+          .attr("stroke-opacity", 0.4)
+          .selectAll("line")
+          .data(links)
+          .join("line")
+          .attr("stroke-width", 2);
+
+        const node = svg.append("g")
+          .selectAll("g")
+          .data(nodes)
+          .join("g")
+          .style("cursor", d => d.type === 'author' ? 'pointer' : 'default')
+          .on("click", function(event, d){
+            if (d.type === 'author') { event.stopPropagation(); showAuthorPublications(d); }
+          })
+          .call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
+
+        node.append("circle")
+          .attr("r", d => d.type === 'cluster' ? 20 : (d.type === 'theme' ? 15 : Math.max(8, Math.sqrt(d.value || 1) * 3)))
+          .attr("fill", d => d.type === 'cluster' ? color(d.cluster_id) : (d.type === 'theme' ? d3.color(color(d.cluster_id)).darker(0.5) : d3.color(color(d.cluster_id)).darker(1)))
+          .attr("stroke", "white")
+          .attr("stroke-width", 3);
+
+        node.append("text")
+          .attr("text-anchor", "middle")
+          .attr("dy", "0.35em")
+          .style("font-size", d => d.type === 'cluster' ? "24px" : (d.type === 'theme' ? "20px" : "24px"))
+          .style("font-weight", d => d.type === 'cluster' ? 700 : 400)
+          .style("fill", d => d.type === 'author' ? '#007acc' : 'white')
+          .style("stroke", "black")
+          .style("stroke-width", "0.5px")
+          .style("paint-order", "stroke")
+          .style("text-decoration", d => d.type === 'author' ? 'underline' : 'none')
+          .text(d => {
+            let text = d.name;
+            if (d.type === 'theme') text = text.replace(/^Theme \d+: /, '');
+            const maxLength = d.type === 'author' ? 25 : 30;
+            return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
+          });
+
+        simulation.on("tick", () => {
+          link.attr("x1", d => d.source.x)
+              .attr("y1", d => d.source.y)
+              .attr("x2", d => d.target.x)
+              .attr("y2", d => d.target.y);
+          node.attr("transform", d => `translate(${d.x},${d.y})`);
+        });
+
+        function dragstarted(event, d){ if (!event.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; }
+        function dragged(event, d){ d.fx = event.x; d.fy = event.y; }
+        function dragended(event, d){ if (!event.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; }
+
+        containerDiv.appendChild(svg.node());
       });
 
-    simulation.on("tick", () => {
-      link.attr("x1", d => d.source.x)
-          .attr("y1", d => d.source.y)
-          .attr("x2", d => d.target.x)
-          .attr("y2", d => d.target.y);
-      node.attr("transform", d => `translate(${d.x},${d.y})`);
-    });
+      document.getElementById("mount").appendChild(containerDiv);
+    }
 
-    function dragstarted(event, d){ if (!event.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; }
-    function dragged(event, d){ d.fx = event.x; d.fy = event.y; }
-    function dragended(event, d){ if (!event.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; }
+    document.getElementById('layoutSelect').addEventListener('change', updateVisualization);
+    document.getElementById('minPapers').addEventListener('change', updateVisualization);
+  </script>
 
-    containerDiv.appendChild(svg.node());
-  });
-
-  document.getElementById("mount").appendChild(containerDiv);
-}
-
-// Event listeners
-document.getElementById('layoutSelect').addEventListener('change', updateVisualization);
-document.getElementById('minPapers').addEventListener('change', updateVisualization);
-</script>
+</body>
+</html>
