@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AUS Research Pipeline — vertical steps</title>
+<style>
+  :root{
+    --bg:#0b0f17; --panel:#0f1420; --fg:#e8eef7; --muted:#a6b0bf;
+    --cyan:#06b6d4; --amber:#f59e0b; --green:#22c55e; --edge:#344154;
+    --W: 2800;
+  }
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
+  header{position:sticky;top:0;background:rgba(11,15,23,.75);backdrop-filter:blur(6px);border-bottom:1px solid #1f2937;padding:8px 14px;display:flex;gap:10px;align-items:center;z-index:10}
+  header h1{font-size:16px;margin:0;font-weight:600}
+  .controls{margin-left:auto;display:flex;gap:8px}
+  button{border:1px solid #1f2937;background:#111827;color:#cbd5e1;padding:6px 10px;border-radius:10px;cursor:pointer;font-size:12px}
+  button:hover{background:#0b1220}
+  .canvas{width:100%;height:calc(100vh - 48px);overflow:auto}
+  svg{width:100%}
+
+  .node text{font-size:22px;fill:var(--fg);dominant-baseline:middle;text-anchor:middle;font-weight:600}
+  .card{fill:var(--panel);stroke-width:2px;rx:16;ry:16;filter:url(#drop)}
+  .src .card{stroke:var(--cyan)}
+  .hub .card{stroke:#60a5fa}
+  .ent .card{stroke:var(--amber)}
+  .step .card{stroke:var(--green)}
+
+  .link{fill:none;stroke:var(--edge);stroke-width:2px;marker-end:url(#arrow);opacity:.95}
+  .link.src2db{stroke:var(--cyan)}
+  .link.db2ent{stroke:var(--amber)}
+  .link.ent2llm{stroke:var(--green)}
+  .link.llmstep{stroke:var(--green)}
+
+  .col-label{
+    font-size:40px;font-weight:800;letter-spacing:.3px;
+    paint-order:stroke;stroke:rgba(0,0,0,.45);stroke-width:4;
+    text-anchor:middle;dominant-baseline:central;
+  }
+  .label-sources  { fill: var(--cyan); }
+  .label-database { fill: #60a5fa; }
+  .label-entities { fill: var(--amber); }
+  .label-llm      { fill: var(--green); }
+
+  .input-group{ fill:transparent; stroke:var(--green); stroke-width:2px; stroke-dasharray:10 8; rx:18; ry:18 }
+</style>
+<body>
+<header>
+  <h1>AUS Research Pipeline</h1>
+  <div class="controls">
+    <button id="downloadPng">Download PNG</button>
+  </div>
+</header>
+<div class="canvas">
+  <svg id="svg" viewBox="0 0 2800 3200" preserveAspectRatio="xMidYMid meet"></svg>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script>
+const W = 2800;
+
+/* columns */
+const COL = { sources:240, db:920, ents:1550, llm:2300 };
+
+/* spacing */
+const headerY = 80;
+const topPad  = 320;
+const srcGap  = 120;
+const entGap  = 120;
+
+/* data */
+const sources  = ["Scopus","OpenAlex","Crossref","Unpaywall","Screen scrapers","CSV files"];
+const entities = ["publications","authors","journals","affiliations","topics","metrics"];
+
+const llmSteps = [
+  "Publications for AUS engineering authors\n1/1/2022 --> current", // step0 (same level & size as DB)
+  "Title + Abstract + Keywords",                                        // step1
+  "Catalog\nClusters + Themes + Descriptions",                          // step2 (dashed group with step1)
+  "LLM: gpt-4o-mini",                                                   // step3
+  "Assign one cluster + one theme",                                     // step4
+  "If unassigned → run 3 attempts\npick highest confidence",            // step5
+  "If still unassigned → create new themes",                            // step6
+  "Assigned themes ready"                                               // step7
+];
+
+/* nodes */
+const nodes = [];
+sources.forEach((label, i) => nodes.push({ id:`src${i}`, label, x:COL.sources, y: topPad + i*srcGap, cls:"src" }));
+
+const dbY = topPad + ((sources.length-1)*srcGap)/2;
+nodes.push({ id:"db", label:"Database", x:COL.db, y: dbY, cls:"hub", big:true });
+
+entities.forEach((label, i) => nodes.push({ id:`ent${i}`, label, x:COL.ents, y: topPad + i*entGap, cls:"ent" }));
+
+/* Steps: step0 aligned with DB; others below */
+const stepGap   = 240;
+const fusedGap  = 100;
+
+let y = dbY;
+llmSteps.forEach((label, i) => {
+  nodes.push({ id:`step${i}`, label, x: COL.llm, y, cls:"step", wide:true });
+  y += (i === 1 ? fusedGap : stepGap);
+});
+
+const byId = new Map(nodes.map(n=>[n.id,n]));
+
+/* sizing — steps big; step0 forced to DB size */
+function size(d){
+  const lines = String(d.label).split("\n");
+  const maxChars = Math.max(...lines.map(s=>s.length));
+  const isStep = d.cls === "step";
+  const base = (d.big || isStep) ? 460 : 300;
+  const w = Math.max(base, Math.min(620, maxChars*8 + 44));
+  const h = Math.max((d.big || isStep) ? 120 : 64, lines.length*24 + 28);
+  return { w, h };
+}
+const DB_SIZE = size(byId.get("db"));
+function sizeWithOverrides(d){
+  if(d.id === "step0") return { w: DB_SIZE.w, h: DB_SIZE.h };
+  return size(d);
+}
+function rect(d){
+  const {w,h} = sizeWithOverrides(d);
+  return { x:d.x - w/2, y:d.y - h/2, w, h };
+}
+function anchor(d, side){
+  const r = rect(d);
+  const cx = r.x + r.w/2, cy = r.y + r.h/2;
+  return side === "left" ? {x:r.x, y:cy} :
+         side === "right"? {x:r.x + r.w, y:cy} :
+         side === "top"  ? {x:cx, y:r.y} :
+                           {x:cx, y:r.y + r.h};
+}
+function smooth(a,b){
+  const dx = b.x - a.x, dy = b.y - a.y;
+  const k = 0.55;
+  const c1x = a.x + dx*k, c1y = a.y;
+  const c2x = b.x - dx*k, c2y = b.y - dy*k;
+  return `M ${a.x} ${a.y} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${b.x} ${b.y}`;
+}
+
+/* edges */
+const edges = [];
+sources.forEach((_, i) => edges.push({ from:`src${i}`, to:"db", kind:"src2db" }));
+entities.forEach((_, i) => edges.push({ from:"db", to:`ent${i}`, kind:"db2ent" }));
+entities.forEach((_, i) => edges.push({ from:`ent${i}`, to:`step0`, kind:"ent2llm" }));
+for(let i=1;i<llmSteps.length;i++) edges.push({ from:`step${i-1}`, to:`step${i}`, kind:"llmstep" });
+
+/* svg */
+const svg = d3.select("#svg");
+const g = svg.append("g");
+
+/* defs */
+const defs = svg.append("defs");
+const drop = defs.append("filter").attr("id","drop");
+drop.append("feDropShadow").attr("dx","0").attr("dy","2").attr("stdDeviation","3").attr("flood-color","#000").attr("flood-opacity",".35");
+defs.append("marker").attr("id","arrow").attr("viewBox","0 0 12 12")
+  .attr("refX",12).attr("refY",6).attr("markerWidth",11).attr("markerHeight",11).attr("orient","auto-start-reverse")
+  .append("path").attr("d","M 0 0 L 12 6 L 0 12 z").attr("fill","#94a3b8");
+
+/* links */
+g.append("g")
+  .selectAll("path.link")
+  .data(edges)
+  .enter()
+  .append("path")
+  .attr("class", d => `link ${d.kind}`)
+  .attr("d", d => {
+    const from = byId.get(d.from);
+    const to   = byId.get(d.to);
+    const A =
+      d.kind === "src2db"  ? anchor(from, "right")  :
+      d.kind === "db2ent"  ? anchor(from, "right")  :
+      d.kind === "ent2llm" ? anchor(from, "right")  :
+                              anchor(from, "bottom");
+    const B =
+      d.kind === "src2db"  ? anchor(to,   "left")   :
+      d.kind === "db2ent"  ? anchor(to,   "left")   :
+      d.kind === "ent2llm" ? anchor(to,   "left")   :
+                              anchor(to,   "top");
+    return smooth(A,B);
+  });
+
+/* nodes */
+const nodeG = g.append("g")
+  .selectAll("g.node")
+  .data(nodes)
+  .enter()
+  .append("g")
+  .attr("class", d=>`node ${d.cls}`)
+  .attr("transform", d => {
+    const r = rect(d);
+    return `translate(${r.x},${r.y})`;
+  });
+
+nodeG.append("rect")
+  .attr("class","card")
+  .attr("width", d=>rect(d).w)
+  .attr("height", d=>rect(d).h);
+
+/* multiline labels */
+const lineH = 24;
+nodeG.each(function(d){
+  const gnode = d3.select(this);
+  const r = rect(d);
+  const lines = String(d.label).split("\n");
+  const baseY = r.h/2 - ((lines.length - 1) * lineH)/2;
+  const text = gnode.append("text")
+    .attr("x", r.w/2)
+    .attr("y", baseY)
+    .attr("text-anchor","middle")
+    .attr("dominant-baseline","middle");
+  text.selectAll("tspan")
+    .data(lines)
+    .enter()
+    .append("tspan")
+    .attr("x", r.w/2)
+    .attr("dy", (l,i)=> i===0 ? 0 : lineH)
+    .text(l => l);
+});
+
+/* dashed wrapper around step1 & step2 */
+(function drawInputGroup(){
+  const r1 = rect(byId.get("step1"));
+  const r2 = rect(byId.get("step2"));
+  const pad = 32;
+  const gx1 = Math.min(r1.x, r2.x) - pad;
+  const gx2 = Math.max(r1.x + r1.w, r2.x + r2.w) + pad;
+  const gy1 = Math.min(r1.y, r2.y) - pad - 10;
+  const gy2 = Math.max(r1.y + r1.h, r2.y + r2.h) + pad;
+  g.insert("rect", ":first-child")
+    .attr("class","input-group")
+    .attr("x", gx1).attr("y", gy1)
+    .attr("width", gx2 - gx1).attr("height", gy2 - gy1);
+})();
+
+/* headers */
+svg.append("text").attr("class","col-label label-sources")
+  .attr("x", COL.sources).attr("y", headerY).text("Sources");
+svg.append("text").attr("class","col-label label-database")
+  .attr("x", COL.db).attr("y", headerY).text("Database");
+svg.append("text").attr("class","col-label label-entities")
+  .attr("x", COL.ents).attr("y", headerY).text("Entities");
+svg.append("text").attr("class","col-label label-llm")
+  .attr("x", COL.llm).attr("y", headerY).text("LLM");
+
+/* auto-fit viewBox once */
+(function fit(){
+  const bbox = g.node().getBBox();
+  svg.attr("viewBox", [0,0,W, bbox.y + bbox.height + 240].join(" "));
+})();
+
+/* Download PNG */
+document.getElementById("downloadPng").onclick = async () => {
+  const svgEl = document.getElementById("svg");
+  const vb = svgEl.viewBox.baseVal;
+  const width = vb && vb.width ? vb.width : svgEl.getBoundingClientRect().width;
+  const height = vb && vb.height ? vb.height : svgEl.getBoundingClientRect().height;
+
+  // clone and inline styles
+  const clone = svgEl.cloneNode(true);
+  const styleText = Array.from(document.querySelectorAll("style")).map(s=>s.textContent).join("\n");
+  const styleEl = document.createElementNS("http://www.w3.org/2000/svg","style");
+  styleEl.textContent = styleText;
+  clone.insertBefore(styleEl, clone.firstChild);
+
+  // ensure xmlns + explicit size
+  clone.setAttribute("xmlns","http://www.w3.org/2000/svg");
+  clone.setAttribute("width", width);
+  clone.setAttribute("height", height);
+
+  // background rect
+  const bg = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim() || "#0b0f17";
+  const bgRect = document.createElementNS("http://www.w3.org/2000/svg","rect");
+  bgRect.setAttribute("x","0"); bgRect.setAttribute("y","0");
+  bgRect.setAttribute("width","100%"); bgRect.setAttribute("height","100%");
+  bgRect.setAttribute("fill", bg);
+  clone.insertBefore(bgRect, clone.firstChild);
+
+  const xml = new XMLSerializer().serializeToString(clone);
+  const svgBlob = new Blob([xml], {type:"image/svg+xml;charset=utf-8"});
+  const url = URL.createObjectURL(svgBlob);
+
+  const img = new Image();
+  const scale = Math.max(1, Math.min(4, window.devicePixelRatio || 2));
+  img.onload = () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.floor(width * scale);
+    canvas.height = Math.floor(height * scale);
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = bg;
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.setTransform(scale,0,0,scale,0,0);
+    ctx.drawImage(img, 0, 0);
+    URL.revokeObjectURL(url);
+    canvas.toBlob(blob => {
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "aus_pipeline_llm_vertical_steps.png";
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
+    }, "image/png");
+  };
+  img.onerror = () => URL.revokeObjectURL(url);
+  img.src = url;
+};
+</script>
+</body>
+</html>
