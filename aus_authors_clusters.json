@@ -90,12 +90,6 @@
     "clusters_themes": "Artificial Intelligence and Data Science: AI Applications (5) ||| Intelligent and Next-Generation Systems: Cyber Systems, Infrastructure, Platforms (1)"
   },
   {
-    "author_name": "Anas, AlMajali",
-    "dep": "CSE",
-    "totalpub": 14,
-    "clusters_themes": "Artificial Intelligence and Data Science: AI Applications (4) ||| Artificial Intelligence and Data Science: Machine Learning Techniques (1) ||| Bioengineering: Biosensors, Implantable Devices and Bioprocesses (1) ||| Energy, Water and Sustainable Environment: Smart Grid (5) ||| Intelligent and Next-Generation Systems: Robotics and Intelligent Autonomous Systems (3)"
-  },
-  {
     "author_name": "Fadi, Aloul",
     "dep": "CSE",
     "totalpub": 21,
@@ -494,7 +488,7 @@
   {
     "author_name": "Lotfi, Romdhane",
     "dep": "MCE",
-    "totalpub": 61,
-    "clusters_themes": "Artificial Intelligence and Data Science: AI Applications (24) ||| Artificial Intelligence and Data Science: Machine Learning Techniques (1) ||| Bioengineering: Medical Imaging and Bio-Informatics (5) ||| Bioengineering: Neuroengineering (1) ||| Energy, Water and Sustainable Environment: Sustainable Construction Management (3) ||| Intelligent and Next-Generation Systems: Mechatronics and Control (4) ||| Intelligent and Next-Generation Systems: Robotics and Intelligent Autonomous Systems (15) ||| Materials, Mechanics, Manufacturing and Structure: Additive Manufacturing (1) ||| Materials, Mechanics, Manufacturing and Structure: Experimental and Computational Mechanics (3) ||| Materials, Mechanics, Manufacturing and Structure: Smart and Sustainable Manufacturing (1)"
+    "totalpub": 28,
+    "clusters_themes": "Bioengineering: Neuroengineering (1) ||| Energy, Water and Sustainable Environment: Sustainable Construction Management (3) ||| Intelligent and Next-Generation Systems: Mechatronics and Control (4) ||| Intelligent and Next-Generation Systems: Robotics and Intelligent Autonomous Systems (15) ||| Materials, Mechanics, Manufacturing and Structure: Additive Manufacturing (1) ||| Materials, Mechanics, Manufacturing and Structure: Experimental and Computational Mechanics (3) ||| Materials, Mechanics, Manufacturing and Structure: Smart and Sustainable Manufacturing (1)"
   }
 ]

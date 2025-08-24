@@ -198,15 +198,6 @@
     "scopus_url": "https://www.scopus.com/authid/detail.uri?authorId=24385607100"
   },
   {
-    "orcid": "0000-0002-4031-670X",
-    "scopus_id": 56027795900,
-    "first_name": "Anas",
-    "last_name": "AlMajali",
-    "department": "CSE",
-    "designation": "Associate Professor Computer Science Engineering",
-    "scopus_url": "https://www.scopus.com/authid/detail.uri?authorId=56027795900"
-  },
-  {
     "orcid": "0000-0001-5129-7789",
     "scopus_id": 6601962378,
     "first_name": "Fadi",
@@ -454,8 +445,8 @@
     "scopus_id": 7401625771,
     "first_name": "Mohamed",
     "last_name": "Hassan",
-    "department": "ELE",
-    "designation": "Professor Electrical Engineering",
+    "department": "CSE",
+    "designation": "Associate Professor Computer Science Engineering",
     "scopus_url": "https://www.scopus.com/authid/detail.uri?authorId=7401625771"
   },
   {
@@ -463,8 +454,8 @@
     "scopus_id": 7401625771,
     "first_name": "Mohamed",
     "last_name": "Hassan",
-    "department": "CSE",
-    "designation": "Associate Professor Computer Science Engineering",
+    "department": "ELE",
+    "designation": "Professor Electrical Engineering",
     "scopus_url": "https://www.scopus.com/authid/detail.uri?authorId=7401625771"
   },
   {
