@@ -65,15 +65,15 @@
     const authorName = baseNameOnly(rawName);
     document.getElementById('title').textContent = `${authorName} (${total})`;
 
-    const TYPE_ORDER = ['internal','local','international','student','unknown'];
+    const TYPE_ORDER = ['internal','local','international','regional','unknown'];
     const TYPE_LABEL = {
       internal:'Internal',
       local:'Local',
       international:'International',
-      student:'Student',
+      regional:'Regional',
       unknown:'Unknown'
     };
-    const TYPE_COLOR = { internal:'#2563eb', local:'#10b981', international:'#ef4444', student:'#7c3aed', unknown:'#6b7280' };
+    const TYPE_COLOR = { internal:'#2563eb', local:'#10b981', international:'#ef4444', regional:'#7c3aed', unknown:'#6b7280' };
 
     const CELL_W = 64;
     const ROW_H = 18;
