@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Collaborator Heat Maps</title>
+  <style>
+    :root { --bg:#fff; --fg:#111; --muted:#6b7280; --border:#e5e7eb; }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; background:var(--bg); color:var(--fg); }
+
+    header {
+      position: sticky; top:0; z-index:10; background:#fff; border-bottom:1px solid var(--border);
+      padding:10px 14px;
+      display:grid; grid-template-columns: 1fr auto 1fr; align-items:center;
+    }
+    header .left { justify-self:start; }
+    header .center { justify-self:center; font-size:18px; font-weight:700; }
+    header .right { justify-self:end; }
+    header a { text-decoration:none; color:#2563eb; font-weight:600; }
+
+    .legend { display:flex; align-items:center; gap:10px; font-size:12px; color:#374151; }
+    .legend .bar { width:160px; height:10px; border-radius:6px; background: linear-gradient(90deg, #eef2ff, #60a5fa, #1d4ed8); border:1px solid #e5e7eb; }
+
+    .boards { padding:14px; display:flex; gap:16px; overflow-x:auto; }
+    .board {
+      flex:0 0 auto; border:1px solid var(--border); border-radius:10px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03); padding:10px 12px;
+    }
+    .board-title { margin:2px 0 6px; font-weight:800; font-size:18px; }
+    .note { padding: 0 14px 16px; color:#6b7280; font-size:12px; }
+
+    .tooltip {
+      position: fixed; background:#111; color:#fff; font-size:12px; padding:6px 8px; border-radius:6px;
+      pointer-events:none; opacity:0; transform: translate(-50%, -120%); white-space:nowrap;
+    }
+    svg { width:100%; height:auto; display:block; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="left"><a href="javascript:history.back()">← Back</a></div>
+    <div id="title" class="center"></div>
+    <div class="right">
+      <div class="legend"><span>fewer</span><div class="bar"></div><span>more</span></div>
+    </div>
+  </header>
+
+  <div class="boards" id="boards"></div>
+  <div class="note">Hover a cell to see the collaborator name and count.</div>
+
+  <div id="tooltip" class="tooltip"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script>
+    const qs = new URLSearchParams(location.search);
+    const aid = qs.get('aid');
+    const rawName = decodeURIComponent(qs.get('name') || '');
+    const total = qs.get('total') || '';
+
+    function baseNameOnly(s){
+      let out = s || '';
+      while (/\s*\([^)]*\)\s*$/.test(out)) out = out.replace(/\s*\([^)]*\)\s*$/,'');
+      return out.trim();
+    }
+    const authorName = baseNameOnly(rawName);
+    document.getElementById('title').textContent = `${authorName} (${total})`;
+
+    const TYPE_ORDER = ['internal','local','international','student','unknown'];
+    const TYPE_LABEL = {
+      internal:'Internal',
+      local:'Local',
+      international:'International',
+      student:'Student',
+      unknown:'Unknown'
+    };
+    const TYPE_COLOR = { internal:'#2563eb', local:'#10b981', international:'#ef4444', student:'#7c3aed', unknown:'#6b7280' };
+
+    const CELL_W = 64;
+    const ROW_H = 18;
+    const TOP_H = 26;
+    const LEFT_LABEL_W = 260;
+    const MARGIN = { top: TOP_H, right: 16, bottom: 12, left: LEFT_LABEL_W };
+
+    const tip = document.getElementById('tooltip');
+
+    function hexToRGBA(hex, alpha){
+      const m = hex.replace('#','');
+      const bigint = parseInt(m,16);
+      const r = (bigint >> 16) & 255;
+      const g = (bigint >> 8) & 255;
+      const b = bigint & 255;
+      return `rgba(${r},${g},${b},${alpha})`;
+    }
+
+    (async function init(){
+      const ts = Date.now();
+      const r = await fetch(`./aus_authors_collaborators.json?v=${ts}`);
+      const arr = await r.json();
+      const rec = arr.find(x => String(x.author_id) === String(aid));
+      if(!rec){
+        document.getElementById('boards').innerHTML = '<p style="padding:14px;">No collaborators found.</p>';
+        return;
+      }
+      render(rec);
+    })();
+
+    function render(rec){
+      const rows = (rec.collaborators || []).map(d => ({
+        name: d.coauthor_name || `ID ${d.coauthor_id}`,
+        shared: +d.shared_pubs || 0,
+        type: d.collab_type || 'unknown'
+      }));
+
+      const maxShared = d3.max(rows, d => d.shared) || 1;
+      const color = d3.scaleSequential().domain([0, maxShared]).interpolator(d3.interpolateBlues);
+
+      const groups = [];
+      TYPE_ORDER.forEach(t => {
+        const list = rows.filter(r => (r.type || 'unknown') === t)
+                         .sort((a,b)=> d3.descending(a.shared, b.shared) || d3.ascending(a.name, b.name));
+        if (list.length) groups.push({ type:t, items:list });
+      });
+
+      const boardsWrap = document.getElementById('boards');
+      boardsWrap.innerHTML = '';
+
+      groups.forEach(g => {
+        const board = document.createElement('div');
+        board.className = 'board';
+        board.style.minWidth = (MARGIN.left + CELL_W + MARGIN.right) + 'px';
+        // light tinted background per type
+        const base = TYPE_COLOR[g.type] || '#6b7280';
+        board.style.backgroundColor = hexToRGBA(base, 0.08);
+
+        const h = document.createElement('div');
+        h.className = 'board-title';
+        h.style.color = base;
+        h.textContent = `${TYPE_LABEL[g.type]} co-authors = ${g.items.length}`;
+        board.appendChild(h);
+
+        const width = MARGIN.left + CELL_W + MARGIN.right;
+        const height = MARGIN.top + MARGIN.bottom + g.items.length * ROW_H;
+        const svg = d3.create('svg')
+          .attr('width', width)
+          .attr('height', height)
+          .attr('style','max-width:100%;height:auto;font:12px system-ui, -apple-system, Segoe UI, Roboto, Arial;');
+        board.appendChild(svg.node());
+
+        svg.append('text')
+          .attr('x', MARGIN.left + CELL_W/2)
+          .attr('y', 16)
+          .attr('text-anchor','middle')
+          .attr('font-weight',700)
+          .text(authorName);
+
+        svg.append('rect')
+          .attr('x', MARGIN.left - 0.5)
+          .attr('y', MARGIN.top - 0.5)
+          .attr('width', CELL_W + 1)
+          .attr('height', height - MARGIN.top - MARGIN.bottom + 1)
+          .attr('fill','none')
+          .attr('stroke','#e5e7eb');
+
+        let y = MARGIN.top;
+        g.items.forEach(item => {
+          svg.append('text')
+            .attr('x', MARGIN.left - 10)
+            .attr('y', y + ROW_H/2)
+            .attr('text-anchor','end')
+            .attr('dominant-baseline','middle')
+            .text(truncate(item.name, 36))
+            .append('title').text(item.name);
+
+          const val = item.shared;
+          svg.append('rect')
+            .attr('x', MARGIN.left).attr('y', y)
+            .attr('width', CELL_W).attr('height', ROW_H - 2)
+            .attr('rx', 3).attr('ry', 3)
+            .attr('fill', val === 0 ? '#eef2ff' : color(val))
+            .attr('stroke','#e5e7eb')
+            .on('mousemove', (ev) => {
+              tip.style.opacity = 1;
+              tip.textContent = `${item.name} • ${val} publication${val===1?'':'s'} • ${TYPE_LABEL[g.type]}`;
+              tip.style.left = ev.clientX + 'px';
+              tip.style.top = ev.clientY + 'px';
+            })
+            .on('mouseleave', () => tip.style.opacity = 0);
+
+          svg.append('text')
+            .attr('x', MARGIN.left + CELL_W/2)
+            .attr('y', y + ROW_H/2 - 1)
+            .attr('text-anchor','middle')
+            .attr('dominant-baseline','middle')
+            .attr('font-weight',600)
+            .attr('fill', val >= maxShared*0.5 ? '#fff' : '#111')
+            .text(val);
+
+          svg.append('line')
+            .attr('x1', 0).attr('y1', y + ROW_H + 0.5)
+            .attr('x2', width).attr('y2', y + ROW_H + 0.5)
+            .attr('stroke','#f1f5f9');
+
+          y += ROW_H;
+        });
+
+        boardsWrap.appendChild(board);
+      });
+    }
+
+    function truncate(s, n){
+      s = s || '';
+      return s.length > n ? s.slice(0, n-1) + '…' : s;
+    }
+  </script>
+</body>
+</html>
