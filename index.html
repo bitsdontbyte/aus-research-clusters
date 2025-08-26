@@ -95,6 +95,8 @@
     let rawData = null;
     let currentLayout = 'tree';
     let minPapers = 1;
+	const LINK_PAD = 30;   // push links this many pixels to the right of the name
+	const LINK_GAP = 14;   // space between the two links
 
     function showAuthorPublications(authorData) {
       const popupTitle = document.getElementById('popupTitle');
@@ -188,31 +190,23 @@
     function closePopup() { document.getElementById('popupOverlay').style.display = 'none'; }
     document.getElementById('popupOverlay').addEventListener('click', function(e) { if (e.target === this) closePopup(); });
 
-    // navigate to full-page collaborator tree
-    function openCollabPage(authorData){
-      const aid = authorData.author_id || (String(authorData.id||'').match(/author_(\d+)_/)||[])[1];
-      const total = authorData.value || (authorData.all_publications ? authorData.all_publications.length : '');
-      const name = encodeURIComponent(authorData.name || '');
-      const url = `collab.html?aid=${encodeURIComponent(aid)}&name=${name}&total=${encodeURIComponent(total)}`;
-      window.location.href = url;
-    }
+// collab now goes to authorships
+function openCollabPage(authorData){
+  const aid = authorData.author_id || (String(authorData.id||'').match(/author_(\d+)_/)||[])[1];
+  const total = authorData.value || (authorData.all_publications ? authorData.all_publications.length : '');
+  const name = encodeURIComponent(authorData.name || '');
+  const url = `authorships.html?aid=${encodeURIComponent(aid)}&name=${name}&total=${encodeURIComponent(total)}`;
+  window.location.href = url;
+}
 
-    // add icon to the RIGHT of a text element using computed text length
-    function addBlueHeadsIconRight(groupSel, labelSel, onClick){
-      const xStart = +labelSel.attr('x') || 0;
-      const textLen = labelSel.node().getComputedTextLength();
-      const xRight = xStart + textLen + 6;
-
-      const icon = groupSel.append('g')
-        .attr('transform', `translate(${xRight},0)`)
-        .style('cursor','pointer')
-        .on('click', (ev)=>{ ev.stopPropagation(); onClick(); });
-
-      const blue = '#007acc';
-      icon.append('circle').attr('cx', 4).attr('cy', 0).attr('r', 6).attr('fill', blue);
-      icon.append('circle').attr('cx', 12).attr('cy', 0).attr('r', 6).attr('fill', blue);
-      icon.append('path').attr('d','M-2,6 C3,2 13,2 18,6 L18,9 L-2,9 Z').attr('fill', blue);
-    }
+// authorships now goes to collab
+function openAuthorshipsPage(authorData){
+  const aid = authorData.author_id || (String(authorData.id||'').match(/author_(\d+)_/)||[])[1];
+  const total = authorData.value || (authorData.all_publications ? authorData.all_publications.length : '');
+  const name = encodeURIComponent(authorData.name || '');
+  const url = `collab.html?aid=${encodeURIComponent(aid)}&name=${name}&total=${encodeURIComponent(total)}`;
+  window.location.href = url;
+}
 
     const timestamp = Date.now();
     fetch(`./clusters.json?v=${timestamp}`)
@@ -255,292 +249,189 @@
       }).filter(cluster => cluster.children.length > 0);
       return filtered;
     }
-function renderTreeVisualization() {
-  const filteredData = filterDataByMinPapers(rawData);
-  const clusters = filteredData.children || [];
-  const palette = d3.schemeTableau10.concat(d3.schemeSet3 || []);
-  const color = d3.scaleOrdinal(clusters.map(d => d.id), palette.slice(0, clusters.length));
 
-  const containerDiv = document.createElement("div");
-  containerDiv.style.display = "flex";
-  containerDiv.style.flexDirection = "column";
-  containerDiv.style.gap = "20px";
-  containerDiv.style.padding = "20px";
+    function renderTreeVisualization() {
+      const filteredData = filterDataByMinPapers(rawData);
+      const clusters = filteredData.children || [];
+      const palette = d3.schemeTableau10.concat(d3.schemeSet3 || []);
+      const color = d3.scaleOrdinal(clusters.map(d => d.id), palette.slice(0, clusters.length));
 
-  clusters.forEach((cluster) => {
-    const clusterTreeData = {
-      name: cluster.name, type: 'cluster', id: cluster.id, cluster_id: cluster.id,
-      children: cluster.children || []
-    };
+      const containerDiv = document.createElement("div");
+      containerDiv.style.display = "flex";
+      containerDiv.style.flexDirection = "column";
+      containerDiv.style.gap = "20px";
+      containerDiv.style.padding = "20px";
 
-    const root = d3.hierarchy(clusterTreeData);
+      clusters.forEach((cluster) => {
+        const clusterTreeData = {
+          name: cluster.name, type: 'cluster', id: cluster.id, cluster_id: cluster.id,
+          children: cluster.children || []
+        };
 
-    root.sort((a, b) => {
-      const typeOrder = { 'cluster': 1, 'theme': 2, 'author': 3 };
-      const aType = typeOrder[a.data.type] || 4;
-      const bType = typeOrder[b.data.type] || 4;
-      if (aType !== bType) return d3.ascending(aType, bType);
+        const root = d3.hierarchy(clusterTreeData);
 
-      if (a.data.type === 'author' && b.data.type === 'author') {
-        const aCount = (a.data.dominant_papers != null)
-          ? a.data.dominant_papers
-          : ((a.data.theme_publications && a.data.theme_publications.length) || 0);
-        const bCount = (b.data.dominant_papers != null)
-          ? b.data.dominant_papers
-          : ((b.data.theme_publications && b.data.theme_publications.length) || 0);
-        const byCount = d3.descending(aCount, bCount);
-        return byCount !== 0 ? byCount : d3.ascending((a.data.name || ''), (b.data.name || ''));
-      }
-      return d3.ascending((a.data.name || ''), (b.data.name || ''));
-    });
+        root.sort((a, b) => {
+          const typeOrder = { 'cluster': 1, 'theme': 2, 'author': 3 };
+          const aType = typeOrder[a.data.type] || 4;
+          const bType = typeOrder[b.data.type] || 4;
+          if (aType !== bType) return d3.ascending(aType, bType);
 
-    const treeWidth = 2200;
-    const dx = 25;
-    const tree = d3.tree().nodeSize([dx, treeWidth / (root.height + 1)]);
-    tree(root);
+          if (a.data.type === 'author' && b.data.type === 'author') {
+            const aCount = (a.data.dominant_papers != null)
+              ? a.data.dominant_papers
+              : ((a.data.theme_publications && a.data.theme_publications.length) || 0);
+            const bCount = (b.data.dominant_papers != null)
+              ? b.data.dominant_papers
+              : ((b.data.theme_publications && b.data.theme_publications.length) || 0);
+            const byCount = d3.descending(aCount, bCount);
+            return byCount !== 0 ? byCount : d3.ascending((a.data.name || ''), (b.data.name || ''));
+          }
+          return d3.ascending((a.data.name || ''), (b.data.name || ''));
+        });
 
-    let x0 = Infinity, x1 = -x0;
-    root.each(d => { if (d.x > x1) x1 = d.x; if (d.x < x0) x0 = d.x; });
-    const height = x1 - x0 + dx * 2;
+        const treeWidth = 2200;
+        const dx = 25;
+        const tree = d3.tree().nodeSize([dx, treeWidth / (root.height + 1)]);
+        tree(root);
 
-    const svg = d3.create("svg")
-      .attr("width", treeWidth)
-      .attr("height", height)
-      .attr("viewBox", [-80, x0 - dx, treeWidth, height])
-      .attr("style", "max-width: 100%; height: auto; font: 14px system-ui, -apple-system, Segoe UI, Roboto, Arial;");
+        let x0 = Infinity, x1 = -x0;
+        root.each(d => { if (d.x > x1) x1 = d.x; if (d.x < x0) x0 = d.x; });
+        const height = x1 - x0 + dx * 2;
 
-    svg.append("g")
-      .attr("fill", "none")
-      .attr("stroke-opacity", 0.5)
-      .attr("stroke-width", 2)
-      .selectAll("path")
-      .data(root.links())
-      .join("path")
-      .attr("stroke", color(cluster.id))
-      .attr("d", d3.linkHorizontal().x(d => d.y).y(d => d.x));
+        const svg = d3.create("svg")
+          .attr("width", treeWidth)
+          .attr("height", height)
+          .attr("viewBox", [-80, x0 - dx, treeWidth, height])
+          .attr("style", "max-width: 100%; height: auto; font: 14px system-ui, -apple-system, Segoe UI, Roboto, Arial;");
 
-    const node = svg.append("g")
-      .attr("stroke-linejoin", "round")
-      .attr("stroke-width", 4)
-      .selectAll("g")
-      .data(root.descendants())
-      .join("g")
-      .attr("transform", d => `translate(${d.y},${d.x})`)
-      .style("cursor", d => d.data.type === 'author' ? 'pointer' : 'default')
-      .on("click", function (event, d) {
-        if (d.data.type === 'author') {
-          event.stopPropagation();
-          showAuthorPublications(d.data);
-        }
-      });
+        svg.append("g")
+          .attr("fill", "none")
+          .attr("stroke-opacity", 0.5)
+          .attr("stroke-width", 2)
+          .selectAll("path")
+          .data(root.links())
+          .join("path")
+          .attr("stroke", color(cluster.id))
+          .attr("d", d3.linkHorizontal().x(d => d.y).y(d => d.x));
 
-    node.append("circle")
-      .attr("r", d => d.data.type === 'cluster' ? 8 : (d.data.type === 'theme' ? 5 : 3))
-      .attr("fill", d => {
-        if (d.data.type === 'cluster') return color(cluster.id);
-        if (d.data.type === 'theme') return d3.color(color(cluster.id)).darker(0.5);
-        return d3.color(color(cluster.id)).darker(1);
-      })
-      .attr("stroke", "white");
-
-    const labels = node.append("text")
-      .attr("dy", "0.31em")
-      .attr("x", d => (d.data.type === 'cluster' ? 15 : (d.data.type === 'theme' ? 12 : 20)))
-      .attr("text-anchor", "start")
-      .attr("stroke", "white")
-      .attr("stroke-width", d => d.data.type === 'author' ? 3 : 4)
-      .attr("paint-order", "stroke")
-      .style("font-weight", d => (d.data.type === 'cluster' ? 700 : (d.data.type === 'theme' ? 600 : 400)))
-      .style("font-size", d => (d.data.type === 'cluster' ? "24px" : (d.data.type === 'theme' ? "18px" : "18px")))
-      .style("fill", "black")
-      .text(d => {
-        if (d.data.type === 'cluster') return d.data.name;
-        if (d.data.type === 'theme') return (d.data.name || '').replace(/^Theme \d+: /, '');
-        return d.data.name;
-      })
-      .each(function (d) {
-        const text = d3.select(this);
-        const maxLength = d.data.type === 'cluster' ? 70 : (d.data.type === 'theme' ? 50 : 40);
-        const currentText = text.text();
-        if (currentText.length > maxLength) text.text(currentText.substring(0, maxLength) + "...");
-      });
-
-    // ICON FIX — external layer, fixed X, aligned to author's Y
-    const iconLayer = svg.append("g");  // separate from nodes
-
-    root.descendants()
-      .filter(d => d.data.type === 'author')
-      .forEach(d => {
-        const yFixed = treeWidth - 60;
-        const xAligned = d.x;
-
-        const iconGroup = iconLayer.append('g')
-          .attr('transform', `translate(${yFixed},${xAligned})`)
-          .style('cursor', 'pointer')
-          .on('click', (ev) => {
-            ev.stopPropagation();
-            openCollabPage(d.data);
+        const node = svg.append("g")
+          .attr("stroke-linejoin", "round")
+          .attr("stroke-width", 4)
+          .selectAll("g")
+          .data(root.descendants())
+          .join("g")
+          .attr("transform", d => `translate(${d.y},${d.x})`)
+          .style("cursor", d => d.data.type === 'author' ? 'pointer' : 'default')
+          .on("click", function (event, d) {
+            if (d.data.type === 'author') {
+              event.stopPropagation();
+              showAuthorPublications(d.data);
+            }
           });
 
-        const blue = '#007acc';
-        iconGroup.append('circle').attr('cx', 4).attr('cy', 0).attr('r', 6).attr('fill', blue);
-        iconGroup.append('circle').attr('cx', 12).attr('cy', 0).attr('r', 6).attr('fill', blue);
-        iconGroup.append('path').attr('d', 'M-2,6 C3,2 13,2 18,6 L18,9 L-2,9 Z').attr('fill', blue);
-      });
+        node.append("circle")
+          .attr("r", d => d.data.type === 'cluster' ? 8 : (d.data.type === 'theme' ? 5 : 3))
+          .attr("fill", d => {
+            if (d.data.type === 'cluster') return color(cluster.id);
+            if (d.data.type === 'theme') return d3.color(color(cluster.id)).darker(0.5);
+            return d3.color(color(cluster.id)).darker(1);
+          })
+          .attr("stroke", "white");
 
-    containerDiv.appendChild(svg.node());
-  });
-
-  document.getElementById("mount").appendChild(containerDiv);
-}
-
-function renderTreeVisualization() {
-  const filteredData = filterDataByMinPapers(rawData);
-  const clusters = filteredData.children || [];
-  const palette = d3.schemeTableau10.concat(d3.schemeSet3 || []);
-  const color = d3.scaleOrdinal(clusters.map(d => d.id), palette.slice(0, clusters.length));
-
-  const containerDiv = document.createElement("div");
-  containerDiv.style.display = "flex";
-  containerDiv.style.flexDirection = "column";
-  containerDiv.style.gap = "20px";
-  containerDiv.style.padding = "20px";
-
-  clusters.forEach((cluster) => {
-    const clusterTreeData = {
-      name: cluster.name, type: 'cluster', id: cluster.id, cluster_id: cluster.id,
-      children: cluster.children || []
-    };
-
-    const root = d3.hierarchy(clusterTreeData);
-
-    root.sort((a, b) => {
-      const typeOrder = { 'cluster': 1, 'theme': 2, 'author': 3 };
-      const aType = typeOrder[a.data.type] || 4;
-      const bType = typeOrder[b.data.type] || 4;
-      if (aType !== bType) return d3.ascending(aType, bType);
-
-      if (a.data.type === 'author' && b.data.type === 'author') {
-        const aCount = (a.data.dominant_papers != null)
-          ? a.data.dominant_papers
-          : ((a.data.theme_publications && a.data.theme_publications.length) || 0);
-        const bCount = (b.data.dominant_papers != null)
-          ? b.data.dominant_papers
-          : ((b.data.theme_publications && b.data.theme_publications.length) || 0);
-        const byCount = d3.descending(aCount, bCount);
-        return byCount !== 0 ? byCount : d3.ascending((a.data.name || ''), (b.data.name || ''));
-      }
-      return d3.ascending((a.data.name || ''), (b.data.name || ''));
-    });
-
-    const treeWidth = 2200;
-    const dx = 25;
-    const tree = d3.tree().nodeSize([dx, treeWidth / (root.height + 1)]);
-    tree(root);
-
-    let x0 = Infinity, x1 = -x0;
-    root.each(d => { if (d.x > x1) x1 = d.x; if (d.x < x0) x0 = d.x; });
-    const height = x1 - x0 + dx * 2;
-
-    const svg = d3.create("svg")
-      .attr("width", treeWidth)
-      .attr("height", height)
-      .attr("viewBox", [-80, x0 - dx, treeWidth, height])
-      .attr("style", "max-width: 100%; height: auto; font: 14px system-ui, -apple-system, Segoe UI, Roboto, Arial;");
-
-    svg.append("g")
-      .attr("fill", "none")
-      .attr("stroke-opacity", 0.5)
-      .attr("stroke-width", 2)
-      .selectAll("path")
-      .data(root.links())
-      .join("path")
-      .attr("stroke", color(cluster.id))
-      .attr("d", d3.linkHorizontal().x(d => d.y).y(d => d.x));
-
-    const node = svg.append("g")
-      .attr("stroke-linejoin", "round")
-      .attr("stroke-width", 4)
-      .selectAll("g")
-      .data(root.descendants())
-      .join("g")
-      .attr("transform", d => `translate(${d.y},${d.x})`)
-      .style("cursor", d => d.data.type === 'author' ? 'pointer' : 'default')
-      .on("click", function (event, d) {
-        if (d.data.type === 'author') {
-          event.stopPropagation();
-          showAuthorPublications(d.data);
-        }
-      });
-
-    node.append("circle")
-      .attr("r", d => d.data.type === 'cluster' ? 8 : (d.data.type === 'theme' ? 5 : 3))
-      .attr("fill", d => {
-        if (d.data.type === 'cluster') return color(cluster.id);
-        if (d.data.type === 'theme') return d3.color(color(cluster.id)).darker(0.5);
-        return d3.color(color(cluster.id)).darker(1);
-      })
-      .attr("stroke", "white");
-
-    const labels = node.append("text")
-      .attr("dy", "0.31em")
-      .attr("x", d => (d.data.type === 'cluster' ? 15 : (d.data.type === 'theme' ? 12 : 20)))
-      .attr("text-anchor", "start")
-      .attr("stroke", "white")
-      .attr("stroke-width", d => d.data.type === 'author' ? 3 : 4)
-      .attr("paint-order", "stroke")
-      .style("font-weight", d => (d.data.type === 'cluster' ? 700 : (d.data.type === 'theme' ? 600 : 400)))
-      .style("font-size", d => (d.data.type === 'cluster' ? "24px" : (d.data.type === 'theme' ? "18px" : "18px")))
-      .style("fill", "black")
-      .text(d => {
-        if (d.data.type === 'cluster') return d.data.name;
-        if (d.data.type === 'theme') return (d.data.name || '').replace(/^Theme \d+: /, '');
-        return d.data.name;
-      })
-      .each(function (d) {
-        const text = d3.select(this);
-        const maxLength = d.data.type === 'cluster' ? 70 : (d.data.type === 'theme' ? 50 : 40);
-        const currentText = text.text();
-        if (currentText.length > maxLength) text.text(currentText.substring(0, maxLength) + "...");
-      });
-
-    // Add [collab] text next to author names using estimated positioning
-    node.filter(d => d.data.type === 'author')
-      .each(function(d) {
-        const nodeGroup = d3.select(this);
-        
-        // Get the author name and estimate its width
-        const authorName = d.data.name || '';
-        const truncatedName = authorName.length > 40 ? authorName.substring(0, 40) + "..." : authorName;
-        
-        // Estimate text width: roughly 9 pixels per character for 18px font
-        const estimatedWidth = truncatedName.length * 9;
-        
-        nodeGroup.append("text")
-          .text("[collab]")
-          .attr("x", 20 + estimatedWidth + 10) // label x + estimated width + padding
-          .attr("y", 0)
+        const labels = node.append("text")
           .attr("dy", "0.31em")
-          .style("font-size", "12px")
-          .style("fill", "#007acc")
-          .style("cursor", "pointer")
-          .on("click", function (ev) {
-            ev.stopPropagation();
-            openCollabPage(d.data);
+          .attr("x", d => (d.data.type === 'cluster' ? 15 : (d.data.type === 'theme' ? 12 : 20)))
+          .attr("text-anchor", "start")
+          .attr("stroke", "white")
+          .attr("stroke-width", d => d.data.type === 'author' ? 3 : 4)
+          .attr("paint-order", "stroke")
+          .style("font-weight", d => (d.data.type === 'cluster' ? 700 : (d.data.type === 'theme' ? 600 : 400)))
+          .style("font-size", d => (d.data.type === 'cluster' ? "24px" : (d.data.type === 'theme' ? "18px" : "18px")))
+          .style("fill", "black")
+          .text(d => {
+            if (d.data.type === 'cluster') return d.data.name;
+            if (d.data.type === 'theme') return (d.data.name || '').replace(/^Theme \d+: /, '');
+            return d.data.name;
+          })
+          .each(function (d) {
+            const text = d3.select(this);
+            const maxLength = d.data.type === 'cluster' ? 70 : (d.data.type === 'theme' ? 50 : 40);
+            const currentText = text.text();
+            if (currentText.length > maxLength) text.text(currentText.substring(0, maxLength) + "...");
           });
+
+        // right-side icon for Collab
+        const iconLayer = svg.append("g");
+        root.descendants()
+          .filter(d => d.data.type === 'author')
+          .forEach(d => {
+            const yFixed = treeWidth - 60;
+            const xAligned = d.x;
+
+            const iconGroup = iconLayer.append('g')
+              .attr('transform', `translate(${yFixed},${xAligned})`)
+              .style('cursor', 'pointer')
+              .on('click', (ev) => {
+                ev.stopPropagation();
+                openCollabPage(d.data);
+              });
+
+            const blue = '#007acc';
+            iconGroup.append('circle').attr('cx', 4).attr('cy', 0).attr('r', 6).attr('fill', blue);
+            iconGroup.append('circle').attr('cx', 12).attr('cy', 0).attr('r', 6).attr('fill', blue);
+            iconGroup.append('path').attr('d', 'M-2,6 C3,2 13,2 18,6 L18,9 L-2,9 Z').attr('fill', blue);
+          });
+
+        // [collab] link (existing) + new [authorships] link to its right
+        node.filter(d => d.data.type === 'author')
+          .each(function(d) {
+            const nodeGroup = d3.select(this);
+
+            const authorName = d.data.name || '';
+            const truncatedName = authorName.length > 40 ? authorName.substring(0, 40) + "..." : authorName;
+            const estimatedWidth = truncatedName.length * 9;
+			const collabX = 20 + estimatedWidth + LINK_PAD;
+
+            const collabText = nodeGroup.append("text")
+              .text("[collab]")
+              .attr("x", collabX)
+              .attr("y", 0)
+              .attr("dy", "0.31em")
+              .style("font-size", "12px")
+              .style("fill", "#007acc")
+              .style("cursor", "pointer")
+              .on("click", function (ev) {
+                ev.stopPropagation();
+                openCollabPage(d.data);
+              });
+
+            const collabW = collabText.node()?.getComputedTextLength?.() || 54;
+            const x2 = collabX + collabW + LINK_GAP;
+
+            nodeGroup.append("text")
+              .text("[authorships]")
+              .attr("x", x2)
+              .attr("y", 0)
+              .attr("dy", "0.31em")
+              .style("font-size", "12px")
+              .style("fill", "#16a34a")
+              .style("cursor", "pointer")
+              .on("click", function (ev) {
+                ev.stopPropagation();
+                openAuthorshipsPage(d.data);
+              });
+          });
+
+        containerDiv.appendChild(svg.node());
       });
 
-    containerDiv.appendChild(svg.node());
-  });
+      document.getElementById("mount").appendChild(containerDiv);
+    }
 
-  document.getElementById("mount").appendChild(containerDiv);
-}
-
-
-
-    
-
-   
+    function renderClusterVisualization() {
+      document.getElementById("mount").innerHTML =
+        '<div style="padding:20px;color:#6b7280;">Cluster layout not implemented in this file.</div>';
+    }
 
     document.getElementById('layoutSelect').addEventListener('change', updateVisualization);
     document.getElementById('minPapers').addEventListener('change', updateVisualization);
