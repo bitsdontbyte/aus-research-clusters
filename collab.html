@@ -4,37 +4,52 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Collaborator Heat Maps</title>
+
   <style>
-    :root { --bg:#fff; --fg:#111; --muted:#6b7280; --border:#e5e7eb; }
+    :root { --bg:#fff; --fg:#111; --muted:#6b7280; --border:#e5e7eb; --blue:#2563eb; }
+    * { box-sizing: border-box; }
     body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; background:var(--bg); color:var(--fg); }
 
-    header {
-      position: sticky; top:0; z-index:10; background:#fff; border-bottom:1px solid var(--border);
-      padding:10px 14px;
-      display:grid; grid-template-columns: 1fr auto 1fr; align-items:center;
+    header{
+      position:sticky; top:0; z-index:10; background:#fff; border-bottom:1px solid var(--border);
+      padding:8px 12px; display:grid; grid-template-columns:1fr auto 1fr; align-items:center;
     }
-    header .left { justify-self:start; }
-    header .center { justify-self:center; font-size:18px; font-weight:700; }
-    header .right { justify-self:end; }
-    header a { text-decoration:none; color:#2563eb; font-weight:600; }
+    header .left{ justify-self:start; }
+    header .center{ justify-self:center; font-size:16px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    header .right{ justify-self:end; }
+    header a{ text-decoration:none; color:var(--blue); font-weight:600; }
 
-    .legend { display:flex; align-items:center; gap:10px; font-size:12px; color:#374151; }
-    .legend .bar { width:160px; height:10px; border-radius:6px; background: linear-gradient(90deg, #eef2ff, #60a5fa, #1d4ed8); border:1px solid #e5e7eb; }
+    .legend{ display:flex; align-items:center; gap:8px; font-size:12px; color:#374151; }
+    .legend .bar{ width:140px; height:8px; border-radius:6px; background:linear-gradient(90deg,#eef2ff,#60a5fa,#1d4ed8); border:1px solid #e5e7eb; }
 
-    .boards { padding:14px; display:flex; gap:16px; overflow-x:auto; }
-    .board {
-      flex:0 0 auto; border:1px solid var(--border); border-radius:10px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.03); padding:10px 12px;
+    .boards{
+      padding:12px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:14px;
+      align-items:flex-start;
     }
-    .board-title { margin:2px 0 6px; font-weight:800; font-size:18px; }
-    .note { padding: 0 14px 16px; color:#6b7280; font-size:12px; }
 
-    .tooltip {
-      position: fixed; background:#111; color:#fff; font-size:12px; padding:6px 8px; border-radius:6px;
-      pointer-events:none; opacity:0; transform: translate(-50%, -120%); white-space:nowrap;
+    .board{
+      border:1px solid var(--border); border-radius:10px; padding:8px 10px;
+      box-shadow:0 1px 2px rgba(0,0,0,0.03);
+      flex:0 0 auto;
+      background:#fff;
+      overflow:hidden;
     }
-    svg { width:100%; height:auto; display:block; }
+
+    .board-title{ margin:0 0 6px; font-weight:800; font-size:16px; text-align:center; }
+    .note{ padding:0 12px 14px; color:#6b7280; font-size:12px; }
+
+    .tooltip{
+      position:fixed; background:#111; color:#fff; font-size:12px; padding:6px 8px; border-radius:6px;
+      pointer-events:none; opacity:0; transform:translate(-50%,-120%); white-space:nowrap;
+    }
+    svg{ width:100%; height:auto; display:block; }
+    .board svg{ overflow:visible; }
   </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 </head>
 <body>
   <header>
@@ -50,7 +65,6 @@
 
   <div id="tooltip" class="tooltip"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
   <script>
     const qs = new URLSearchParams(location.search);
     const aid = qs.get('aid');
@@ -62,34 +76,52 @@
       while (/\s*\([^)]*\)\s*$/.test(out)) out = out.replace(/\s*\([^)]*\)\s*$/,'');
       return out.trim();
     }
-    const authorName = baseNameOnly(rawName);
-    document.getElementById('title').textContent = `${authorName} (${total})`;
+    function shortLF(full){
+      const t = full.trim();
+      if (/^[^\s]+\s+[A-Z]\.$/.test(t)) return t;
+      const parts = t.split(/\s+/);
+      if (parts.length >= 2){
+        const first = parts[0];
+        const last  = parts.slice(1).join(' ');
+        return `${last} ${first[0]}.`;
+      }
+      return t;
+    }
+    function pct(n, d){ return d ? Math.round((n/d)*100) + '%' : '0%'; }
 
-    const TYPE_ORDER = ['internal','local','international','regional','unknown'];
-    const TYPE_LABEL = {
-      internal:'Internal',
-      local:'Local',
-      international:'International',
-      regional:'Regional',
-      unknown:'Unknown'
+    const authorNameFull = baseNameOnly(rawName);
+    const authorNameShort = shortLF(authorNameFull);
+    document.getElementById('title').textContent = `${authorNameShort} (${total})`;
+
+    const TYPE_ORDER = ['Same_Dept','CEN','AUS','Local','Regional','International','Student','Unknown'];
+    const ORDER_INDEX = new Map(TYPE_ORDER.map((k,i)=>[k,i]));
+    const TYPE_COLOR = {
+      Same_Dept: '#FFA23A',
+      CEN: '#EF39A7',
+      AUS: '#740E4C',
+      Local: '#10b981',
+      Regional: '#0ea5e9',
+      International: '#ef4444',
+      Student: '#7c3aed',
+      Unknown: '#6b7280'
     };
-    const TYPE_COLOR = { internal:'#2563eb', local:'#10b981', international:'#ef4444', regional:'#7c3aed', unknown:'#6b7280' };
 
-    const CELL_W = 64;
-    const ROW_H = 18;
-    const TOP_H = 26;
-    const LEFT_LABEL_W = 260;
-    const MARGIN = { top: TOP_H, right: 16, bottom: 12, left: LEFT_LABEL_W };
+    /* layout: extra space at bottom + always one empty row */
+    const CELL_W = 10;
+    const COUNT_W = 26;
+    const ROW_H  = 22;
+    const TOP_H  = 28;
+    const LEFT_LABEL_W = 168;
+    const MARGIN = { top: TOP_H, right: 12, bottom: 40, left: LEFT_LABEL_W };  // bigger bottom
+    const EXTRA_ROWS = 1;  // always add one spacer row
 
+    const boardsEl = document.getElementById('boards');
     const tip = document.getElementById('tooltip');
 
     function hexToRGBA(hex, alpha){
       const m = hex.replace('#','');
-      const bigint = parseInt(m,16);
-      const r = (bigint >> 16) & 255;
-      const g = (bigint >> 8) & 255;
-      const b = bigint & 255;
-      return `rgba(${r},${g},${b},${alpha})`;
+      const n = parseInt(m,16);
+      return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${alpha})`;
     }
 
     (async function init(){
@@ -98,7 +130,7 @@
       const arr = await r.json();
       const rec = arr.find(x => String(x.author_id) === String(aid));
       if(!rec){
-        document.getElementById('boards').innerHTML = '<p style="padding:14px;">No collaborators found.</p>';
+        boardsEl.innerHTML = '<p style="padding:12px;">No collaborators found.</p>';
         return;
       }
       render(rec);
@@ -107,104 +139,226 @@
     function render(rec){
       const rows = (rec.collaborators || []).map(d => ({
         name: d.coauthor_name || `ID ${d.coauthor_id}`,
-        shared: +d.shared_pubs || 0,
-        type: d.collab_type || 'unknown'
+        shared: Number(d.shared_pubs) || 0,
+        type: String(d.collab_type || 'Unknown').trim()
       }));
 
+      if (!rows.length){
+        boardsEl.innerHTML = '<p style="padding:12px;">No collaborators found in JSON.</p>';
+        return;
+      }
+
+      const totalCollabs = rows.length;
       const maxShared = d3.max(rows, d => d.shared) || 1;
       const color = d3.scaleSequential().domain([0, maxShared]).interpolator(d3.interpolateBlues);
 
-      const groups = [];
-      TYPE_ORDER.forEach(t => {
-        const list = rows.filter(r => (r.type || 'unknown') === t)
-                         .sort((a,b)=> d3.descending(a.shared, b.shared) || d3.ascending(a.name, b.name));
-        if (list.length) groups.push({ type:t, items:list });
+      const presentTypes = Array.from(new Set(rows.map(r => r.type)));
+      const inOrder = presentTypes.filter(t => ORDER_INDEX.has(t))
+                                  .sort((a,b)=> ORDER_INDEX.get(a) - ORDER_INDEX.get(b));
+      const extras  = presentTypes.filter(t => !ORDER_INDEX.has(t)).sort();
+      const orderedTypes = inOrder.concat(extras);
+
+      boardsEl.innerHTML = '';
+
+      const stats = [];
+      orderedTypes.forEach(type => {
+        const items = rows
+          .filter(r => r.type === type)
+          .sort((a,b)=> b.shared - a.shared || a.name.localeCompare(b.name));
+        if (!items.length) return;
+        stats.push({ type, n: items.length });
+        renderBoard(type, items, totalCollabs, color);
       });
 
-      const boardsWrap = document.getElementById('boards');
-      boardsWrap.innerHTML = '';
+      renderDonut(stats, totalCollabs);
+    }
 
-      groups.forEach(g => {
-        const board = document.createElement('div');
-        board.className = 'board';
-        board.style.minWidth = (MARGIN.left + CELL_W + MARGIN.right) + 'px';
-        // light tinted background per type
-        const base = TYPE_COLOR[g.type] || '#6b7280';
-        board.style.backgroundColor = hexToRGBA(base, 0.08);
+    let clipSeq = 0;
+    function renderBoard(type, items, totalCollabs, color){
+      const base = TYPE_COLOR[type] || '#6b7280';
+      const BOARD_INNER_W = MARGIN.left + CELL_W + COUNT_W + MARGIN.right;
 
-        const h = document.createElement('div');
-        h.className = 'board-title';
-        h.style.color = base;
-        h.textContent = `${TYPE_LABEL[g.type]} co-authors = ${g.items.length}`;
-        board.appendChild(h);
+      const board = document.createElement('div');
+      board.className = 'board';
+      board.style.backgroundColor = hexToRGBA(base, 0.08);
+      board.style.width = (BOARD_INNER_W) + 'px';
+      board.style.flex = '0 0 auto';
 
-        const width = MARGIN.left + CELL_W + MARGIN.right;
-        const height = MARGIN.top + MARGIN.bottom + g.items.length * ROW_H;
-        const svg = d3.create('svg')
-          .attr('width', width)
-          .attr('height', height)
-          .attr('style','max-width:100%;height:auto;font:12px system-ui, -apple-system, Segoe UI, Roboto, Arial;');
-        board.appendChild(svg.node());
+      const h = document.createElement('div');
+      h.className = 'board-title';
+      h.style.color = base;
+      h.textContent = `${type} (${items.length}) ${pct(items.length, totalCollabs)}`;
+      board.appendChild(h);
+
+      // + EXTRA_ROWS and larger bottom padding to prevent last-name cutoff
+      const width = BOARD_INNER_W;
+      const height = MARGIN.top + MARGIN.bottom + (items.length + EXTRA_ROWS) * ROW_H + 12;
+      const svg = d3.create('svg')
+        .attr('width', width)
+        .attr('height', height)
+        .attr('style','max-width:100%;height:auto;font:11px system-ui, -apple-system, Segoe UI, Roboto, Arial;');
+      board.appendChild(svg.node());
+
+      // author label
+      svg.append('text')
+        .attr('x', MARGIN.left + CELL_W/2)
+        .attr('y', 18)
+        .attr('text-anchor','middle')
+        .attr('font-weight',700)
+        .attr('font-size','11px')
+        .attr('fill','var(--blue)')
+        .text(shortLF(authorNameFull));
+
+      // heat column frame
+      svg.append('rect')
+        .attr('x', MARGIN.left - 0.5)
+        .attr('y', MARGIN.top - 0.5)
+        .attr('width', CELL_W + 1)
+        .attr('height', height - MARGIN.top - MARGIN.bottom + 1)
+        .attr('fill','none')
+        .attr('stroke','#e5e7eb');
+
+      // clip long labels to inside box
+      const clipId = `clip-${++clipSeq}`;
+      svg.append('clipPath').attr('id', clipId)
+        .append('rect')
+        .attr('x', 0)
+        .attr('y', MARGIN.top - 2)
+        .attr('width', MARGIN.left - 6)
+        .attr('height', height - MARGIN.top - MARGIN.bottom + 12);
+
+      const labelsG = svg.append('g').attr('clip-path', `url(#${clipId})`);
+
+      let y = MARGIN.top;
+      items.forEach(item => {
+        labelsG.append('text')
+          .attr('x', MARGIN.left - 8)
+          .attr('y', y + ROW_H/2)
+          .attr('dy', '0.35em')
+          .attr('text-anchor','end')
+          .attr('dominant-baseline','middle')
+          .text(truncate(item.name, 22))
+          .append('title').text(item.name);
+
+        const val = item.shared;
+        svg.append('rect')
+          .attr('x', MARGIN.left).attr('y', y + 3)
+          .attr('width', CELL_W).attr('height', ROW_H - 8)
+          .attr('rx', 3).attr('ry', 3)
+          .attr('fill', val === 0 ? '#eef2ff' : color(val))
+          .attr('stroke','#e5e7eb')
+          .on('mousemove', (ev) => {
+            tip.style.opacity = 1;
+            tip.textContent = `${item.name} • ${val} publication${val===1?'':'s'} • ${type}`;
+            tip.style.left = ev.clientX + 'px';
+            tip.style.top = ev.clientY + 'px';
+          })
+          .on('mouseleave', () => tip.style.opacity = 0);
 
         svg.append('text')
-          .attr('x', MARGIN.left + CELL_W/2)
-          .attr('y', 16)
-          .attr('text-anchor','middle')
+          .attr('x', MARGIN.left + CELL_W + 6)
+          .attr('y', y + ROW_H/2)
+          .attr('dy', '0.35em')
+          .attr('text-anchor','start')
+          .attr('dominant-baseline','middle')
           .attr('font-weight',700)
-          .text(authorName);
+          .attr('font-size','11px')
+          .text(val);
 
-        svg.append('rect')
-          .attr('x', MARGIN.left - 0.5)
-          .attr('y', MARGIN.top - 0.5)
-          .attr('width', CELL_W + 1)
-          .attr('height', height - MARGIN.top - MARGIN.bottom + 1)
-          .attr('fill','none')
-          .attr('stroke','#e5e7eb');
+        svg.append('line')
+          .attr('x1', 0).attr('y1', y + ROW_H + 2)
+          .attr('x2', width).attr('y2', y + ROW_H + 2)
+          .attr('stroke','#f1f5f9');
 
-        let y = MARGIN.top;
-        g.items.forEach(item => {
-          svg.append('text')
-            .attr('x', MARGIN.left - 10)
-            .attr('y', y + ROW_H/2)
-            .attr('text-anchor','end')
-            .attr('dominant-baseline','middle')
-            .text(truncate(item.name, 36))
-            .append('title').text(item.name);
-
-          const val = item.shared;
-          svg.append('rect')
-            .attr('x', MARGIN.left).attr('y', y)
-            .attr('width', CELL_W).attr('height', ROW_H - 2)
-            .attr('rx', 3).attr('ry', 3)
-            .attr('fill', val === 0 ? '#eef2ff' : color(val))
-            .attr('stroke','#e5e7eb')
-            .on('mousemove', (ev) => {
-              tip.style.opacity = 1;
-              tip.textContent = `${item.name} • ${val} publication${val===1?'':'s'} • ${TYPE_LABEL[g.type]}`;
-              tip.style.left = ev.clientX + 'px';
-              tip.style.top = ev.clientY + 'px';
-            })
-            .on('mouseleave', () => tip.style.opacity = 0);
-
-          svg.append('text')
-            .attr('x', MARGIN.left + CELL_W/2)
-            .attr('y', y + ROW_H/2 - 1)
-            .attr('text-anchor','middle')
-            .attr('dominant-baseline','middle')
-            .attr('font-weight',600)
-            .attr('fill', val >= maxShared*0.5 ? '#fff' : '#111')
-            .text(val);
-
-          svg.append('line')
-            .attr('x1', 0).attr('y1', y + ROW_H + 0.5)
-            .attr('x2', width).attr('y2', y + ROW_H + 0.5)
-            .attr('stroke','#f1f5f9');
-
-          y += ROW_H;
-        });
-
-        boardsWrap.appendChild(board);
+        y += ROW_H;
       });
+
+      boardsEl.appendChild(board);
+    }
+
+    // donut: non-overlapping labels with simple side-by-side collision resolve + leader lines
+    function renderDonut(stats, totalCollabs){
+      if (!stats.length) return;
+
+      const board = document.createElement('div');
+      board.className = 'board';
+      board.style.width = '420px';
+      board.style.flex = '0 0 auto';
+
+      const PAD = 36;
+      const W = 360, H = 320, R = Math.min(W, H) / 2 - 10;
+      const svg = d3.create('svg').attr('width', W + PAD*2).attr('height', H + PAD*2);
+      const g = svg.append('g').attr('transform', `translate(${W/2 + PAD},${H/2 + PAD})`);
+      board.appendChild(svg.node());
+
+      const pie = d3.pie().sort(null).value(d => d.n);
+      const arcs = pie(stats);
+      const arc = d3.arc().innerRadius(R * 0.6).outerRadius(R);
+      const outer = d3.arc().innerRadius(R * 1.08).outerRadius(R * 1.08);
+
+      g.selectAll('path')
+        .data(arcs)
+        .join('path')
+        .attr('d', arc)
+        .attr('fill', d => TYPE_COLOR[d.data.type] || '#9ca3af')
+        .attr('stroke', '#fff')
+        .attr('stroke-width', 1);
+
+      // initial label points
+      const labels = arcs.map(d => {
+        const c = outer.centroid(d);
+        const angle = (d.startAngle + d.endAngle)/2;
+        const side = Math.cos(angle) >= 0 ? 'right' : 'left';
+        return {
+          d, side,
+          x: c[0],
+          y: c[1],
+          text: `${d.data.type} ${pct(d.data.n, totalCollabs)}`
+        };
+      });
+
+      // resolve overlaps per side
+      const minGap = 14;
+      ['right','left'].forEach(side => {
+        const list = labels.filter(l => l.side === side).sort((a,b)=> a.y - b.y);
+        for (let i=1;i<list.length;i++){
+          const prev = list[i-1];
+          const curr = list[i];
+          if (curr.y - prev.y < minGap){
+            curr.y = prev.y + minGap;
+          }
+        }
+      });
+
+      // draw labels and leader lines
+      const labelG = g.append('g');
+      labels.forEach(l => {
+        const dx = l.side === 'right' ? 4 : -4;
+        const anchor = l.side === 'right' ? 'start' : 'end';
+
+        // leader line from arc edge to label
+        const pArc = outer.centroid(l.d);
+        const pMid = [l.side === 'right' ? pArc[0] + 10 : pArc[0] - 10, l.y];
+        labelG.append('polyline')
+          .attr('points', `${pArc[0]},${pArc[1]} ${pMid[0]},${pMid[1]} ${l.x},${l.y}`)
+          .attr('fill','none')
+          .attr('stroke','#94a3b8')
+          .attr('stroke-width',1);
+
+        // text
+        labelG.append('text')
+          .attr('x', l.x)
+          .attr('y', l.y)
+          .attr('dx', dx)
+          .attr('dy', '0.35em')
+          .attr('text-anchor', anchor)
+          .attr('font-size','12px')
+          .attr('font-weight','700')
+          .attr('fill','var(--blue)')
+          .text(l.text);
+      });
+
+      boardsEl.appendChild(board);
     }
 
     function truncate(s, n){
