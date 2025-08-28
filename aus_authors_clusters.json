@@ -2,8 +2,8 @@
   {
     "author_name": "Nabil, Abdel Jabbar",
     "dep": "CHBE",
-    "totalpub": 7,
-    "clusters_themes": "Bioengineering: Drug Delivery, Microfluidics and Lab on a Chip (2) ||| Energy, Water and Sustainable Environment: Renewable Energy and Power Systems (1) ||| Energy, Water and Sustainable Environment: Sustainability of Environmental and Chemical Processes (3) ||| Materials, Mechanics, Manufacturing and Structure: Advanced and Functional Materials (1)"
+    "totalpub": 9,
+    "clusters_themes": "Bioengineering: Drug Delivery, Microfluidics and Lab on a Chip (2) ||| Energy, Water and Sustainable Environment: Renewable Energy and Power Systems (2) ||| Energy, Water and Sustainable Environment: Sustainability of Environmental and Chemical Processes (4) ||| Materials, Mechanics, Manufacturing and Structure: Advanced and Functional Materials (1)"
   },
   {
     "author_name": "Sameer, Al-Asheh",
@@ -26,14 +26,14 @@
   {
     "author_name": "Naif, Darwish",
     "dep": "CHBE",
-    "totalpub": 6,
-    "clusters_themes": "Energy, Water and Sustainable Environment: Renewable Energy and Power Systems (1) ||| Energy, Water and Sustainable Environment: Sustainability of Environmental and Chemical Processes (2) ||| Energy, Water and Sustainable Environment: Water and Wastewater Treatment (3)"
+    "totalpub": 7,
+    "clusters_themes": "Energy, Water and Sustainable Environment: Renewable Energy and Power Systems (1) ||| Energy, Water and Sustainable Environment: Sustainability of Environmental and Chemical Processes (2) ||| Energy, Water and Sustainable Environment: Water and Wastewater Treatment (4)"
   },
   {
     "author_name": "Ghaleb, Husseini",
     "dep": "CHBE",
-    "totalpub": 58,
-    "clusters_themes": "Bioengineering: Biosensors, Implantable Devices and Bioprocesses (11) ||| Bioengineering: Drug Delivery, Microfluidics and Lab on a Chip (36) ||| Bioengineering: Medical Imaging and Bio-Informatics (3) ||| Bioengineering: Neuroengineering (2) ||| Energy, Water and Sustainable Environment: Environmental Hydraulics and Hydrology (1) ||| Energy, Water and Sustainable Environment: Sustainability of Environmental and Chemical Processes (2) ||| Energy, Water and Sustainable Environment: Water and Wastewater Treatment (2) ||| Materials, Mechanics, Manufacturing and Structure: Additive Manufacturing (1)"
+    "totalpub": 59,
+    "clusters_themes": "Bioengineering: Biosensors, Implantable Devices and Bioprocesses (11) ||| Bioengineering: Drug Delivery, Microfluidics and Lab on a Chip (37) ||| Bioengineering: Medical Imaging and Bio-Informatics (3) ||| Bioengineering: Neuroengineering (2) ||| Energy, Water and Sustainable Environment: Environmental Hydraulics and Hydrology (1) ||| Energy, Water and Sustainable Environment: Sustainability of Environmental and Chemical Processes (2) ||| Energy, Water and Sustainable Environment: Water and Wastewater Treatment (2) ||| Materials, Mechanics, Manufacturing and Structure: Additive Manufacturing (1)"
   },
   {
     "author_name": "Taleb, Ibrahim",
@@ -104,8 +104,8 @@
   {
     "author_name": "Mohammad, Daoud",
     "dep": "CSE",
-    "totalpub": 8,
-    "clusters_themes": "Artificial Intelligence and Data Science: AI Applications (2) ||| Bioengineering: Medical Imaging and Bio-Informatics (3) ||| Bioengineering: Neuroengineering (2) ||| Energy, Water and Sustainable Environment: Renewable Energy and Power Systems (1)"
+    "totalpub": 24,
+    "clusters_themes": "Artificial Intelligence and Data Science: AI Applications (7) ||| Artificial Intelligence and Data Science: Machine Learning Techniques (4) ||| Bioengineering: Medical Imaging and Bio-Informatics (8) ||| Bioengineering: Neuroengineering (3) ||| Energy, Water and Sustainable Environment: Renewable Energy and Power Systems (1) ||| Intelligent and Next-Generation Systems: Robotics and Intelligent Autonomous Systems (1)"
   },
   {
     "author_name": "Dana, Dghaym",
@@ -128,14 +128,14 @@
   {
     "author_name": "Anastassia, Gharib",
     "dep": "CSE",
-    "totalpub": 6,
-    "clusters_themes": "Artificial Intelligence and Data Science: AI Applications (1) ||| Bioengineering: Biosensors, Implantable Devices and Bioprocesses (1) ||| Bioengineering: Neuroengineering (1) ||| Intelligent and Next-Generation Systems: ICT and IoT (2) ||| Supply Chain, Logistics and Transportation Systems: Smart Logistic Systems (1)"
+    "totalpub": 7,
+    "clusters_themes": "Artificial Intelligence and Data Science: AI Applications (1) ||| Bioengineering: Biosensors, Implantable Devices and Bioprocesses (1) ||| Bioengineering: Neuroengineering (1) ||| Intelligent and Next-Generation Systems: ICT and IoT (3) ||| Supply Chain, Logistics and Transportation Systems: Smart Logistic Systems (1)"
   },
   {
     "author_name": "Mohamed, Hassan",
     "dep": "CSE",
-    "totalpub": 58,
-    "clusters_themes": "Artificial Intelligence and Data Science: AI Applications (11) ||| Energy, Water and Sustainable Environment: Renewable Energy and Power Systems (13) ||| Energy, Water and Sustainable Environment: Smart Grid (10) ||| Energy, Water and Sustainable Environment: Sustainable Construction Management (1) ||| Energy, Water and Sustainable Environment: Water and Wastewater Treatment (2) ||| Intelligent and Next-Generation Systems: Cyber Systems, Infrastructure, Platforms (3) ||| Intelligent and Next-Generation Systems: ICT and IoT (3) ||| Intelligent and Next-Generation Systems: Mechatronics and Control (1) ||| Materials, Mechanics, Manufacturing and Structure: Smart and Sustainable Manufacturing (1) ||| Supply Chain, Logistics and Transportation Systems: Operations and Logistics Planning (8) ||| Supply Chain, Logistics and Transportation Systems: Smart Logistic Systems (5)"
+    "totalpub": 16,
+    "clusters_themes": "Artificial Intelligence and Data Science: AI Applications (1) ||| Bioengineering: Biosensors, Implantable Devices and Bioprocesses (2) ||| Intelligent and Next-Generation Systems: Cyber Systems, Infrastructure, Platforms (2) ||| Intelligent and Next-Generation Systems: Mechatronics and Control (10) ||| Materials, Mechanics, Manufacturing and Structure: Experimental and Computational Mechanics (1)"
   },
   {
     "author_name": "Taha, Landolsi",
@@ -164,8 +164,8 @@
   {
     "author_name": "Imran, Zualkernan",
     "dep": "CSE",
-    "totalpub": 39,
-    "clusters_themes": "Artificial Intelligence and Data Science: AI Applications (23) ||| Artificial Intelligence and Data Science: Digital Transformation in Education (1) ||| Artificial Intelligence and Data Science: Machine Learning Techniques (3) ||| Bioengineering: Biosensors, Implantable Devices and Bioprocesses (1) ||| Bioengineering: Medical Imaging and Bio-Informatics (2) ||| Energy, Water and Sustainable Environment: Smart Grid (3) ||| Energy, Water and Sustainable Environment: Sustainable Construction Management (1) ||| Intelligent and Next-Generation Systems: Cyber Systems, Infrastructure, Platforms (2) ||| Intelligent and Next-Generation Systems: ICT and IoT (1) ||| Intelligent and Next-Generation Systems: Robotics and Intelligent Autonomous Systems (2)"
+    "totalpub": 40,
+    "clusters_themes": "Artificial Intelligence and Data Science: AI Applications (23) ||| Artificial Intelligence and Data Science: Digital Transformation in Education (1) ||| Artificial Intelligence and Data Science: Machine Learning Techniques (3) ||| Bioengineering: Biosensors, Implantable Devices and Bioprocesses (1) ||| Bioengineering: Medical Imaging and Bio-Informatics (2) ||| Energy, Water and Sustainable Environment: Smart Grid (3) ||| Energy, Water and Sustainable Environment: Sustainability of Environmental and Chemical Processes (1) ||| Energy, Water and Sustainable Environment: Sustainable Construction Management (1) ||| Intelligent and Next-Generation Systems: Cyber Systems, Infrastructure, Platforms (2) ||| Intelligent and Next-Generation Systems: ICT and IoT (1) ||| Intelligent and Next-Generation Systems: Robotics and Intelligent Autonomous Systems (2)"
   },
   {
     "author_name": "Jamal, Abdalla",
@@ -182,8 +182,8 @@
   {
     "author_name": "Farid, Abed",
     "dep": "CVE",
-    "totalpub": 76,
-    "clusters_themes": "Bioengineering: Biosensors, Implantable Devices and Bioprocesses (1) ||| Energy, Water and Sustainable Environment: Renewable Energy and Power Systems (1) ||| Energy, Water and Sustainable Environment: Sustainable Construction Management (8) ||| Materials, Mechanics, Manufacturing and Structure: Additive Manufacturing (1) ||| Materials, Mechanics, Manufacturing and Structure: Experimental and Computational Mechanics (10) ||| Materials, Mechanics, Manufacturing and Structure: Polymers and Composite Materials (1) ||| Materials, Mechanics, Manufacturing and Structure: Smart and Sustainable Manufacturing (7) ||| Materials, Mechanics, Manufacturing and Structure: Structures and Structural Materials (47)"
+    "totalpub": 77,
+    "clusters_themes": "Bioengineering: Biosensors, Implantable Devices and Bioprocesses (1) ||| Energy, Water and Sustainable Environment: Renewable Energy and Power Systems (1) ||| Energy, Water and Sustainable Environment: Sustainable Construction Management (8) ||| Materials, Mechanics, Manufacturing and Structure: Additive Manufacturing (1) ||| Materials, Mechanics, Manufacturing and Structure: Experimental and Computational Mechanics (10) ||| Materials, Mechanics, Manufacturing and Structure: Polymers and Composite Materials (1) ||| Materials, Mechanics, Manufacturing and Structure: Smart and Sustainable Manufacturing (7) ||| Materials, Mechanics, Manufacturing and Structure: Structures and Structural Materials (48)"
   },
   {
     "author_name": "Mohammad, AlHamaydeh",
@@ -194,8 +194,8 @@
   {
     "author_name": "Tarig, Ali",
     "dep": "CVE",
-    "totalpub": 67,
-    "clusters_themes": "Artificial Intelligence and Data Science: AI Applications (4) ||| Artificial Intelligence and Data Science: Machine Learning Techniques (2) ||| Energy, Water and Sustainable Environment: Environmental Hydraulics and Hydrology (10) ||| Energy, Water and Sustainable Environment: Sustainability of Environmental and Chemical Processes (17) ||| Energy, Water and Sustainable Environment: Sustainable Construction Management (5) ||| Energy, Water and Sustainable Environment: Water and Wastewater Treatment (16) ||| Intelligent and Next-Generation Systems: Radar Technologies and Remote Sensing (10) ||| Intelligent and Next-Generation Systems: Robotics and Intelligent Autonomous Systems (1) ||| Materials, Mechanics, Manufacturing and Structure: Experimental and Computational Mechanics (1) ||| Supply Chain, Logistics and Transportation Systems: Operations and Logistics Planning (1)"
+    "totalpub": 69,
+    "clusters_themes": "Artificial Intelligence and Data Science: AI Applications (5) ||| Artificial Intelligence and Data Science: Machine Learning Techniques (2) ||| Energy, Water and Sustainable Environment: Environmental Hydraulics and Hydrology (10) ||| Energy, Water and Sustainable Environment: Sustainability of Environmental and Chemical Processes (18) ||| Energy, Water and Sustainable Environment: Sustainable Construction Management (5) ||| Energy, Water and Sustainable Environment: Water and Wastewater Treatment (16) ||| Intelligent and Next-Generation Systems: Radar Technologies and Remote Sensing (10) ||| Intelligent and Next-Generation Systems: Robotics and Intelligent Autonomous Systems (1) ||| Materials, Mechanics, Manufacturing and Structure: Experimental and Computational Mechanics (1) ||| Supply Chain, Logistics and Transportation Systems: Operations and Logistics Planning (1)"
   },
   {
     "author_name": "Serter, Atabay",
@@ -236,8 +236,8 @@
   {
     "author_name": "Md., Mortula",
     "dep": "CVE",
-    "totalpub": 47,
-    "clusters_themes": "Bioengineering: Medical Imaging and Bio-Informatics (1) ||| Bioengineering: Neuroengineering (1) ||| Energy, Water and Sustainable Environment: Environmental Hydraulics and Hydrology (2) ||| Energy, Water and Sustainable Environment: Sustainability of Environmental and Chemical Processes (12) ||| Energy, Water and Sustainable Environment: Sustainable Construction Management (6) ||| Energy, Water and Sustainable Environment: Water and Wastewater Treatment (18) ||| Intelligent and Next-Generation Systems: Radar Technologies and Remote Sensing (4) ||| Intelligent and Next-Generation Systems: Robotics and Intelligent Autonomous Systems (1) ||| Materials, Mechanics, Manufacturing and Structure: Experimental and Computational Mechanics (1) ||| Materials, Mechanics, Manufacturing and Structure: Smart and Sustainable Manufacturing (1)"
+    "totalpub": 48,
+    "clusters_themes": "Bioengineering: Medical Imaging and Bio-Informatics (1) ||| Bioengineering: Neuroengineering (1) ||| Energy, Water and Sustainable Environment: Environmental Hydraulics and Hydrology (2) ||| Energy, Water and Sustainable Environment: Sustainability of Environmental and Chemical Processes (13) ||| Energy, Water and Sustainable Environment: Sustainable Construction Management (6) ||| Energy, Water and Sustainable Environment: Water and Wastewater Treatment (18) ||| Intelligent and Next-Generation Systems: Radar Technologies and Remote Sensing (4) ||| Intelligent and Next-Generation Systems: Robotics and Intelligent Autonomous Systems (1) ||| Materials, Mechanics, Manufacturing and Structure: Experimental and Computational Mechanics (1) ||| Materials, Mechanics, Manufacturing and Structure: Smart and Sustainable Manufacturing (1)"
   },
   {
     "author_name": "Sami, Tabsh",
@@ -302,8 +302,8 @@
   {
     "author_name": "Hasan, Mir",
     "dep": "ELE",
-    "totalpub": 30,
-    "clusters_themes": "Artificial Intelligence and Data Science: AI Applications (6) ||| Bioengineering: Medical Imaging and Bio-Informatics (4) ||| Bioengineering: Neuroengineering (4) ||| Energy, Water and Sustainable Environment: Renewable Energy and Power Systems (2) ||| Energy, Water and Sustainable Environment: Smart Grid (1) ||| Intelligent and Next-Generation Systems: Cyber Systems, Infrastructure, Platforms (3) ||| Intelligent and Next-Generation Systems: ICT and IoT (2) ||| Intelligent and Next-Generation Systems: Radar Technologies and Remote Sensing (3) ||| Intelligent and Next-Generation Systems: Robotics and Intelligent Autonomous Systems (3) ||| Materials, Mechanics, Manufacturing and Structure: Experimental and Computational Mechanics (1) ||| Materials, Mechanics, Manufacturing and Structure: Quality and Non-Destructive Evaluation (1)"
+    "totalpub": 31,
+    "clusters_themes": "Artificial Intelligence and Data Science: AI Applications (6) ||| Bioengineering: Medical Imaging and Bio-Informatics (4) ||| Bioengineering: Neuroengineering (5) ||| Energy, Water and Sustainable Environment: Renewable Energy and Power Systems (2) ||| Energy, Water and Sustainable Environment: Smart Grid (1) ||| Intelligent and Next-Generation Systems: Cyber Systems, Infrastructure, Platforms (3) ||| Intelligent and Next-Generation Systems: ICT and IoT (2) ||| Intelligent and Next-Generation Systems: Radar Technologies and Remote Sensing (3) ||| Intelligent and Next-Generation Systems: Robotics and Intelligent Autonomous Systems (3) ||| Materials, Mechanics, Manufacturing and Structure: Experimental and Computational Mechanics (1) ||| Materials, Mechanics, Manufacturing and Structure: Quality and Non-Destructive Evaluation (1)"
   },
   {
     "author_name": "Ahmed, Osman-Ahmed",
@@ -314,8 +314,8 @@
   {
     "author_name": "Nasser, Qaddoumi",
     "dep": "ELE",
-    "totalpub": 14,
-    "clusters_themes": "Artificial Intelligence and Data Science: AI Applications (3) ||| Bioengineering: Medical Imaging and Bio-Informatics (3) ||| Energy, Water and Sustainable Environment: Smart Grid (1) ||| Intelligent and Next-Generation Systems: Mechatronics and Control (1) ||| Materials, Mechanics, Manufacturing and Structure: Advanced and Functional Materials (1) ||| Materials, Mechanics, Manufacturing and Structure: Polymers and Composite Materials (2) ||| Materials, Mechanics, Manufacturing and Structure: Quality and Non-Destructive Evaluation (2) ||| Materials, Mechanics, Manufacturing and Structure: Structures and Structural Materials (1)"
+    "totalpub": 15,
+    "clusters_themes": "Artificial Intelligence and Data Science: AI Applications (4) ||| Bioengineering: Medical Imaging and Bio-Informatics (3) ||| Energy, Water and Sustainable Environment: Smart Grid (1) ||| Intelligent and Next-Generation Systems: Mechatronics and Control (1) ||| Materials, Mechanics, Manufacturing and Structure: Advanced and Functional Materials (1) ||| Materials, Mechanics, Manufacturing and Structure: Polymers and Composite Materials (2) ||| Materials, Mechanics, Manufacturing and Structure: Quality and Non-Destructive Evaluation (2) ||| Materials, Mechanics, Manufacturing and Structure: Structures and Structural Materials (1)"
   },
   {
     "author_name": "Habib Ur, Rehman",
@@ -326,8 +326,8 @@
   {
     "author_name": "Mostafa, Shaaban",
     "dep": "ELE",
-    "totalpub": 109,
-    "clusters_themes": "Artificial Intelligence and Data Science: AI Applications (1) ||| Artificial Intelligence and Data Science: Machine Learning Techniques (1) ||| Bioengineering: Biosensors, Implantable Devices and Bioprocesses (1) ||| Energy, Water and Sustainable Environment: Renewable Energy and Power Systems (47) ||| Energy, Water and Sustainable Environment: Smart Grid (39) ||| Energy, Water and Sustainable Environment: Thermofluids and Combustion (1) ||| Energy, Water and Sustainable Environment: Water and Wastewater Treatment (2) ||| Intelligent and Next-Generation Systems: Cyber Systems, Infrastructure, Platforms (1) ||| Intelligent and Next-Generation Systems: ICT and IoT (1) ||| Intelligent and Next-Generation Systems: Radar Technologies and Remote Sensing (1) ||| Intelligent and Next-Generation Systems: Robotics and Intelligent Autonomous Systems (5) ||| Materials, Mechanics, Manufacturing and Structure: Experimental and Computational Mechanics (1) ||| Supply Chain, Logistics and Transportation Systems: Operations and Logistics Planning (5) ||| Supply Chain, Logistics and Transportation Systems: Smart Logistic Systems (3)"
+    "totalpub": 110,
+    "clusters_themes": "Artificial Intelligence and Data Science: AI Applications (1) ||| Artificial Intelligence and Data Science: Machine Learning Techniques (1) ||| Bioengineering: Biosensors, Implantable Devices and Bioprocesses (1) ||| Energy, Water and Sustainable Environment: Renewable Energy and Power Systems (47) ||| Energy, Water and Sustainable Environment: Smart Grid (40) ||| Energy, Water and Sustainable Environment: Thermofluids and Combustion (1) ||| Energy, Water and Sustainable Environment: Water and Wastewater Treatment (2) ||| Intelligent and Next-Generation Systems: Cyber Systems, Infrastructure, Platforms (1) ||| Intelligent and Next-Generation Systems: ICT and IoT (1) ||| Intelligent and Next-Generation Systems: Radar Technologies and Remote Sensing (1) ||| Intelligent and Next-Generation Systems: Robotics and Intelligent Autonomous Systems (5) ||| Materials, Mechanics, Manufacturing and Structure: Experimental and Computational Mechanics (1) ||| Supply Chain, Logistics and Transportation Systems: Operations and Logistics Planning (5) ||| Supply Chain, Logistics and Transportation Systems: Smart Logistic Systems (3)"
   },
   {
     "author_name": "Usman, Tariq",
@@ -338,14 +338,14 @@
   {
     "author_name": "Amer, Zakaria",
     "dep": "ELE",
-    "totalpub": 15,
-    "clusters_themes": "Artificial Intelligence and Data Science: AI Applications (3) ||| Bioengineering: Medical Imaging and Bio-Informatics (5) ||| Intelligent and Next-Generation Systems: Cyber Systems, Infrastructure, Platforms (1) ||| Intelligent and Next-Generation Systems: Radar Technologies and Remote Sensing (1) ||| Intelligent and Next-Generation Systems: Robotics and Intelligent Autonomous Systems (1) ||| Materials, Mechanics, Manufacturing and Structure: Advanced and Functional Materials (1) ||| Materials, Mechanics, Manufacturing and Structure: Polymers and Composite Materials (2) ||| Materials, Mechanics, Manufacturing and Structure: Quality and Non-Destructive Evaluation (1)"
+    "totalpub": 16,
+    "clusters_themes": "Artificial Intelligence and Data Science: AI Applications (4) ||| Bioengineering: Medical Imaging and Bio-Informatics (5) ||| Intelligent and Next-Generation Systems: Cyber Systems, Infrastructure, Platforms (1) ||| Intelligent and Next-Generation Systems: Radar Technologies and Remote Sensing (1) ||| Intelligent and Next-Generation Systems: Robotics and Intelligent Autonomous Systems (1) ||| Materials, Mechanics, Manufacturing and Structure: Advanced and Functional Materials (1) ||| Materials, Mechanics, Manufacturing and Structure: Polymers and Composite Materials (2) ||| Materials, Mechanics, Manufacturing and Structure: Quality and Non-Destructive Evaluation (1)"
   },
   {
     "author_name": "Ahmed Maged, Ahmed",
     "dep": "INE",
-    "totalpub": 29,
-    "clusters_themes": "Artificial Intelligence and Data Science: AI Applications (8) ||| Artificial Intelligence and Data Science: Digital Transformation in Education (1) ||| Artificial Intelligence and Data Science: Machine Learning Techniques (2) ||| Bioengineering: Drug Delivery, Microfluidics and Lab on a Chip (1) ||| Bioengineering: Medical Imaging and Bio-Informatics (2) ||| Bioengineering: Neuroengineering (1) ||| Energy, Water and Sustainable Environment: Sustainability of Environmental and Chemical Processes (1) ||| Energy, Water and Sustainable Environment: Sustainable Construction Management (2) ||| Energy, Water and Sustainable Environment: Thermofluids and Combustion (1) ||| Intelligent and Next-Generation Systems: Cyber Systems, Infrastructure, Platforms (1) ||| Intelligent and Next-Generation Systems: Mechatronics and Control (1) ||| Intelligent and Next-Generation Systems: Robotics and Intelligent Autonomous Systems (1) ||| Materials, Mechanics, Manufacturing and Structure: Additive Manufacturing (1) ||| Materials, Mechanics, Manufacturing and Structure: Experimental and Computational Mechanics (3) ||| Materials, Mechanics, Manufacturing and Structure: Smart and Sustainable Manufacturing (3)"
+    "totalpub": 30,
+    "clusters_themes": "Artificial Intelligence and Data Science: AI Applications (8) ||| Artificial Intelligence and Data Science: Digital Transformation in Education (1) ||| Artificial Intelligence and Data Science: Machine Learning Techniques (2) ||| Bioengineering: Drug Delivery, Microfluidics and Lab on a Chip (1) ||| Bioengineering: Medical Imaging and Bio-Informatics (2) ||| Bioengineering: Neuroengineering (1) ||| Energy, Water and Sustainable Environment: Sustainability of Environmental and Chemical Processes (1) ||| Energy, Water and Sustainable Environment: Sustainable Construction Management (2) ||| Energy, Water and Sustainable Environment: Thermofluids and Combustion (1) ||| Intelligent and Next-Generation Systems: Cyber Systems, Infrastructure, Platforms (1) ||| Intelligent and Next-Generation Systems: Mechatronics and Control (1) ||| Intelligent and Next-Generation Systems: Robotics and Intelligent Autonomous Systems (1) ||| Materials, Mechanics, Manufacturing and Structure: Additive Manufacturing (1) ||| Materials, Mechanics, Manufacturing and Structure: Experimental and Computational Mechanics (3) ||| Materials, Mechanics, Manufacturing and Structure: Smart and Sustainable Manufacturing (3) ||| Supply Chain, Logistics and Transportation Systems: Operations and Logistics Planning (1)"
   },
   {
     "author_name": "Vian, Ahmed",
@@ -374,8 +374,8 @@
   {
     "author_name": "Mahmoud, Awad",
     "dep": "INE",
-    "totalpub": 17,
-    "clusters_themes": "Artificial Intelligence and Data Science: AI Applications (2) ||| Bioengineering: Healthcare Accreditation and Quality Improvement (1) ||| Energy, Water and Sustainable Environment: Renewable Energy and Power Systems (4) ||| Energy, Water and Sustainable Environment: Sustainable Construction Management (2) ||| Materials, Mechanics, Manufacturing and Structure: Experimental and Computational Mechanics (3) ||| Materials, Mechanics, Manufacturing and Structure: Polymers and Composite Materials (2) ||| Supply Chain, Logistics and Transportation Systems: Operations and Logistics Planning (2) ||| Supply Chain, Logistics and Transportation Systems: Smart Logistic Systems (1)"
+    "totalpub": 27,
+    "clusters_themes": "Artificial Intelligence and Data Science: AI Applications (2) ||| Artificial Intelligence and Data Science: Machine Learning Techniques (1) ||| Bioengineering: Healthcare Accreditation and Quality Improvement (1) ||| Energy, Water and Sustainable Environment: Renewable Energy and Power Systems (4) ||| Energy, Water and Sustainable Environment: Sustainable Construction Management (5) ||| Materials, Mechanics, Manufacturing and Structure: Experimental and Computational Mechanics (4) ||| Materials, Mechanics, Manufacturing and Structure: Polymers and Composite Materials (2) ||| Supply Chain, Logistics and Transportation Systems: Operations and Logistics Planning (7) ||| Supply Chain, Logistics and Transportation Systems: Smart Logistic Systems (1)"
   },
   {
     "author_name": "Zied, Bahroun",
@@ -440,14 +440,14 @@
   {
     "author_name": "Wael, Abuzaid",
     "dep": "MCE",
-    "totalpub": 40,
-    "clusters_themes": "Bioengineering: Biosensors, Implantable Devices and Bioprocesses (1) ||| Materials, Mechanics, Manufacturing and Structure: Additive Manufacturing (6) ||| Materials, Mechanics, Manufacturing and Structure: Advanced and Functional Materials (12) ||| Materials, Mechanics, Manufacturing and Structure: Experimental and Computational Mechanics (8) ||| Materials, Mechanics, Manufacturing and Structure: Polymers and Composite Materials (8) ||| Materials, Mechanics, Manufacturing and Structure: Smart and Sustainable Manufacturing (1) ||| Materials, Mechanics, Manufacturing and Structure: Structures and Structural Materials (4)"
+    "totalpub": 41,
+    "clusters_themes": "Bioengineering: Biosensors, Implantable Devices and Bioprocesses (1) ||| Materials, Mechanics, Manufacturing and Structure: Additive Manufacturing (6) ||| Materials, Mechanics, Manufacturing and Structure: Advanced and Functional Materials (12) ||| Materials, Mechanics, Manufacturing and Structure: Experimental and Computational Mechanics (8) ||| Materials, Mechanics, Manufacturing and Structure: Polymers and Composite Materials (9) ||| Materials, Mechanics, Manufacturing and Structure: Smart and Sustainable Manufacturing (1) ||| Materials, Mechanics, Manufacturing and Structure: Structures and Structural Materials (4)"
   },
   {
     "author_name": "Maen, Alkhader",
     "dep": "MCE",
-    "totalpub": 23,
-    "clusters_themes": "Artificial Intelligence and Data Science: Machine Learning Techniques (1) ||| Materials, Mechanics, Manufacturing and Structure: Additive Manufacturing (4) ||| Materials, Mechanics, Manufacturing and Structure: Advanced and Functional Materials (3) ||| Materials, Mechanics, Manufacturing and Structure: Experimental and Computational Mechanics (9) ||| Materials, Mechanics, Manufacturing and Structure: Polymers and Composite Materials (4) ||| Materials, Mechanics, Manufacturing and Structure: Smart and Sustainable Manufacturing (1) ||| Materials, Mechanics, Manufacturing and Structure: Structures and Structural Materials (1)"
+    "totalpub": 24,
+    "clusters_themes": "Artificial Intelligence and Data Science: Machine Learning Techniques (1) ||| Materials, Mechanics, Manufacturing and Structure: Additive Manufacturing (4) ||| Materials, Mechanics, Manufacturing and Structure: Advanced and Functional Materials (3) ||| Materials, Mechanics, Manufacturing and Structure: Experimental and Computational Mechanics (9) ||| Materials, Mechanics, Manufacturing and Structure: Polymers and Composite Materials (5) ||| Materials, Mechanics, Manufacturing and Structure: Smart and Sustainable Manufacturing (1) ||| Materials, Mechanics, Manufacturing and Structure: Structures and Structural Materials (1)"
   },
   {
     "author_name": "Basil, Darras",
@@ -458,8 +458,8 @@
   {
     "author_name": "Samir, Emam",
     "dep": "MCE",
-    "totalpub": 9,
-    "clusters_themes": "Materials, Mechanics, Manufacturing and Structure: Experimental and Computational Mechanics (6) ||| Materials, Mechanics, Manufacturing and Structure: Polymers and Composite Materials (3)"
+    "totalpub": 10,
+    "clusters_themes": "Materials, Mechanics, Manufacturing and Structure: Advanced and Functional Materials (1) ||| Materials, Mechanics, Manufacturing and Structure: Experimental and Computational Mechanics (6) ||| Materials, Mechanics, Manufacturing and Structure: Polymers and Composite Materials (3)"
   },
   {
     "author_name": "Mehdi, Ghommem",

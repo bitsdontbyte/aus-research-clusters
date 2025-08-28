@@ -822,12 +822,30 @@
     "author_name": "Abdel Jabbar N.",
     "department": "CHBE",
     "designation": "Professor Chemical Engineering",
-    "total_pubs": 7,
+    "total_pubs": 9,
     "aus_pubs": 4,
     "local_pubs": 0,
-    "intl_pubs": 3,
+    "intl_pubs": 5,
     "unknown_pubs": 0,
     "publications": [
+      {
+        "scopus_id": "105001088690",
+        "title": "Fault Diagnosis in Chemical Reactors with Data-Driven Methods",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 3,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "105009134990",
+        "title": "Energy Storage: From Fundamental Principles to Industrial Applications",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 5,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
       {
         "scopus_id": "85127616355",
         "title": "Ionic Liquid Melting Points: Structure-Property Analysis and New Hybrid Group Contribution Model",
@@ -1257,10 +1275,10 @@
     "author_name": "Abed F.",
     "department": "CVE",
     "designation": "Professor Civil Engineering",
-    "total_pubs": 76,
+    "total_pubs": 77,
     "aus_pubs": 31,
     "local_pubs": 7,
-    "intl_pubs": 38,
+    "intl_pubs": 39,
     "unknown_pubs": 0,
     "publications": [
       {
@@ -1338,6 +1356,15 @@
       {
         "scopus_id": "105012169571",
         "title": "Strength of Corroded RC Circular Columns Repaired with Advanced Composites",
+        "aus_authors": 1,
+        "local_authors": 2,
+        "international_authors": 1,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "105013632702",
+        "title": "Rehabilitation of concentric reinforced concrete columns pre-damaged by corrosion using advanced composites",
         "aus_authors": 1,
         "local_authors": 2,
         "international_authors": 1,
@@ -2425,8 +2452,8 @@
     "author_name": "Abuzaid W.",
     "department": "MCE",
     "designation": "Associate Professor Mechanical Engineering",
-    "total_pubs": 40,
-    "aus_pubs": 24,
+    "total_pubs": 41,
+    "aus_pubs": 25,
     "local_pubs": 4,
     "intl_pubs": 12,
     "unknown_pubs": 0,
@@ -2462,6 +2489,15 @@
         "scopus_id": "105010479143",
         "title": "The Effect of Vanadium on the Superelastic Properties of FeMnAlNi Shape Memory Alloy",
         "aus_authors": 4,
+        "local_authors": 0,
+        "international_authors": 0,
+        "unknown_authors": 0,
+        "collab_type": "AUS"
+      },
+      {
+        "scopus_id": "105012838414",
+        "title": "Synergistic integration of carbon nanotubes in laser powder bed fusion: advancing multifunctional metal additive manufacturing",
+        "aus_authors": 5,
         "local_authors": 0,
         "international_authors": 0,
         "unknown_authors": 0,
@@ -2798,9 +2834,9 @@
     "author_name": "Ahmed A.",
     "department": "INE",
     "designation": "Assistant Professor Industrial Engineering",
-    "total_pubs": 29,
+    "total_pubs": 30,
     "aus_pubs": 0,
-    "local_pubs": 9,
+    "local_pubs": 10,
     "intl_pubs": 20,
     "unknown_pubs": 0,
     "publications": [
@@ -2825,6 +2861,15 @@
       {
         "scopus_id": "105010048765",
         "title": "Economic-Statistical Optimization of CUSUM for Monitoring Attributes",
+        "aus_authors": 1,
+        "local_authors": 4,
+        "international_authors": 0,
+        "unknown_authors": 0,
+        "collab_type": "Local"
+      },
+      {
+        "scopus_id": "105013390083",
+        "title": "Exponentially weighted moving average scheme with curtailment for detecting COVID-19 cases: a case study",
         "aus_authors": 1,
         "local_authors": 4,
         "international_authors": 0,
@@ -6254,10 +6299,10 @@
     "author_name": "Ali T.",
     "department": "CVE",
     "designation": "Professor Civil Engineering",
-    "total_pubs": 67,
-    "aus_pubs": 24,
+    "total_pubs": 69,
+    "aus_pubs": 25,
     "local_pubs": 5,
-    "intl_pubs": 38,
+    "intl_pubs": 39,
     "unknown_pubs": 0,
     "publications": [
       {
@@ -6421,6 +6466,24 @@
         "international_authors": 2,
         "unknown_authors": 0,
         "collab_type": "International"
+      },
+      {
+        "scopus_id": "105013190028",
+        "title": "GIS-based Bivariate Analysis of the Impact of Climate on the Abu Dhabi (UAE) Mangrove National Park",
+        "aus_authors": 2,
+        "local_authors": 0,
+        "international_authors": 1,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "105013271160",
+        "title": "A Comparative study on the impact of urbanisation on microclimate in Cairo (Egypt) and London (UK) using remote sensing and Machine Learning",
+        "aus_authors": 3,
+        "local_authors": 0,
+        "international_authors": 0,
+        "unknown_authors": 0,
+        "collab_type": "AUS"
       },
       {
         "scopus_id": "85078468717",
@@ -6697,7 +6760,7 @@
         "title": "Ecotourism and mangrove conservation in Southeast Asia: Current trends and perspectives",
         "aus_authors": 2,
         "local_authors": 0,
-        "international_authors": 28,
+        "international_authors": 29,
         "unknown_authors": 0,
         "collab_type": "International"
       },
@@ -6937,8 +7000,8 @@
     "author_name": "Alkhader M.",
     "department": "MCE",
     "designation": "Professor Mechanical Engineering",
-    "total_pubs": 23,
-    "aus_pubs": 16,
+    "total_pubs": 24,
+    "aus_pubs": 17,
     "local_pubs": 1,
     "intl_pubs": 6,
     "unknown_pubs": 0,
@@ -6947,6 +7010,15 @@
         "scopus_id": "105002242017",
         "title": "Optimizing laser powder bed fusion parameters for support-free 0° overhang structures in stainless steel 316L: the case of honeycomb core sandwich structures",
         "aus_authors": 4,
+        "local_authors": 0,
+        "international_authors": 0,
+        "unknown_authors": 0,
+        "collab_type": "AUS"
+      },
+      {
+        "scopus_id": "105012838414",
+        "title": "Synergistic integration of carbon nanotubes in laser powder bed fusion: advancing multifunctional metal additive manufacturing",
+        "aus_authors": 5,
         "local_authors": 0,
         "international_authors": 0,
         "unknown_authors": 0,
@@ -8351,10 +8423,10 @@
     "author_name": "Awad M.",
     "department": "INE",
     "designation": "Associate Professor Industrial Engineering",
-    "total_pubs": 17,
-    "aus_pubs": 15,
+    "total_pubs": 27,
+    "aus_pubs": 24,
     "local_pubs": 1,
-    "intl_pubs": 1,
+    "intl_pubs": 2,
     "unknown_pubs": 0,
     "publications": [
       {
@@ -8385,6 +8457,15 @@
         "collab_type": "AUS"
       },
       {
+        "scopus_id": "85130357836",
+        "title": "Confirmatory factor analysis of work-related accidents in UAE",
+        "aus_authors": 3,
+        "local_authors": 0,
+        "international_authors": 0,
+        "unknown_authors": 0,
+        "collab_type": "AUS"
+      },
+      {
         "scopus_id": "85137647121",
         "title": "Workers-constrained shutdown maintenance scheduling with skills flexibility: Models and solution algorithms",
         "aus_authors": 3,
@@ -8392,6 +8473,15 @@
         "international_authors": 1,
         "unknown_authors": 0,
         "collab_type": "International"
+      },
+      {
+        "scopus_id": "85139037243",
+        "title": "On-Line Roughness Fault Detection Using Current Profile Measurement",
+        "aus_authors": 2,
+        "local_authors": 0,
+        "international_authors": 0,
+        "unknown_authors": 0,
+        "collab_type": "AUS"
       },
       {
         "scopus_id": "85141743982",
@@ -8421,6 +8511,15 @@
         "collab_type": "AUS"
       },
       {
+        "scopus_id": "85161808886",
+        "title": "The minimisation of giveaway and underweight in poultry proportioning process",
+        "aus_authors": 3,
+        "local_authors": 0,
+        "international_authors": 0,
+        "unknown_authors": 0,
+        "collab_type": "AUS"
+      },
+      {
         "scopus_id": "85179093230",
         "title": "Machine Learning Aided Six Sigma: Perspective and Practical Implementation",
         "aus_authors": 2,
@@ -8428,6 +8527,15 @@
         "international_authors": 0,
         "unknown_authors": 0,
         "collab_type": "Local"
+      },
+      {
+        "scopus_id": "85179783767",
+        "title": "Business Process Re-Engineering Projects Success Factors in United Arab Emirates' Public Organizations",
+        "aus_authors": 3,
+        "local_authors": 0,
+        "international_authors": 0,
+        "unknown_authors": 0,
+        "collab_type": "AUS"
       },
       {
         "scopus_id": "85184129677",
@@ -8457,8 +8565,62 @@
         "collab_type": "AUS"
       },
       {
+        "scopus_id": "85184279720",
+        "title": "Advances in Non-Technical Electricity Loss Detection: A Review",
+        "aus_authors": 2,
+        "local_authors": 0,
+        "international_authors": 0,
+        "unknown_authors": 0,
+        "collab_type": "AUS"
+      },
+      {
+        "scopus_id": "85184283588",
+        "title": "CONTRIBUTING FACTORS TO UTILITY ASSET REPLACEMENT ANALYSIS",
+        "aus_authors": 4,
+        "local_authors": 0,
+        "international_authors": 0,
+        "unknown_authors": 0,
+        "collab_type": "AUS"
+      },
+      {
         "scopus_id": "85190136945",
         "title": "Yield and Energy Modeling for Biochar and Bio-Oil Using Pyrolysis Temperature and Biomass Constituents",
+        "aus_authors": 3,
+        "local_authors": 0,
+        "international_authors": 0,
+        "unknown_authors": 0,
+        "collab_type": "AUS"
+      },
+      {
+        "scopus_id": "85191094431",
+        "title": "Comparative study of risk management in new product development",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 1,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85191826376",
+        "title": "Air leaks fault detection in maintenance using machine learning",
+        "aus_authors": 5,
+        "local_authors": 0,
+        "international_authors": 0,
+        "unknown_authors": 0,
+        "collab_type": "AUS"
+      },
+      {
+        "scopus_id": "85197498977",
+        "title": "Physical Asset Management for Critical Utilities - A Systematic Literature Review",
+        "aus_authors": 2,
+        "local_authors": 0,
+        "international_authors": 0,
+        "unknown_authors": 0,
+        "collab_type": "AUS"
+      },
+      {
+        "scopus_id": "85201669216",
+        "title": "Innovation management systems for public organizations in the UAE",
         "aus_authors": 3,
         "local_authors": 0,
         "international_authors": 0,
@@ -9249,10 +9411,10 @@
     "author_name": "Daoud M.",
     "department": "CSE",
     "designation": "Professor of Practice Computer Engineering",
-    "total_pubs": 8,
+    "total_pubs": 24,
     "aus_pubs": 1,
     "local_pubs": 0,
-    "intl_pubs": 7,
+    "intl_pubs": 23,
     "unknown_pubs": 0,
     "publications": [
       {
@@ -9292,11 +9454,155 @@
         "collab_type": "International"
       },
       {
+        "scopus_id": "105011289935",
+        "title": "Distribution-Aware Chemistry-Informed Reliability Modeling of Lithium-Ion Batteries with RelAI-Net",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 7,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "105013097527",
+        "title": "A Comparative Study of Deep Learning Semantic Segmentation Models for Kidney Segmentation in Ultrasound Images Using the Open Kidney Ultrasound Dataset",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 5,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85123008622",
+        "title": "A CSI-Based Multi-Environment Human Activity Recognition Framework",
+        "aus_authors": 1,
+        "local_authors": 1,
+        "international_authors": 3,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85130151901",
+        "title": "A deep learning approach for decoding visually imagined digits and letters using time–frequency–spatial representation of EEG signals",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 3,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85130952703",
+        "title": "An Approach for Recognizing Two-Human Interactions Using Channel State Information",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 3,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85132010581",
+        "title": "Needle detection using ultrasound B-mode and power Doppler analyses",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 4,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85135004424",
+        "title": "Diagnosing COVID-19 in Chest X-ray Images based on Deep Learning: Transfer Learning versus Deep Features Extraction",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 7,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85135068115",
+        "title": "Voice-Based Human Identification using Machine Learning",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 5,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85138333486",
+        "title": "An Edge-Based Selection Method for Improving Regions-of-Interest Localizations Obtained Using Multiple Deep Learning Object-Detection Models in Breast Ultrasound Images",
+        "aus_authors": 1,
+        "local_authors": 1,
+        "international_authors": 5,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85138704809",
+        "title": "An Enhanced Multi-Phase Stochastic Differential Evolution Framework for Numerical Optimization",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 6,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85145950627",
+        "title": "A comprehensive review of the deep learning-based tumor analysis approaches in histopathological images: segmentation, classification and multi-learning tasks",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 6,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85147090338",
+        "title": "An iterative cyclic tri-strategy hybrid stochastic fractal with adaptive differential algorithm for global numerical optimization",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 5,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85161702002",
+        "title": "A cultural evolution with a modified selection function and adaptive α-cognition procedure for numerical optimization",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 8,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
         "scopus_id": "85167415834",
         "title": "Empowering ultrasound image filtering precision by reducing speckles and preserving edge cues",
         "aus_authors": 1,
         "local_authors": 0,
         "international_authors": 3,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85174524076",
+        "title": "3-sCHSL: Three-Stage Cyclic Hybrid SFS and L-SHADE Algorithm for Single Objective Optimization",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 6,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85179006947",
+        "title": "Improved Kidney Outlining in Ultrasound Images by Combining Deep Learning Semantic Segmentation with Conventional Active Contour",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 4,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85179011214",
+        "title": "Detecting the Regions-of-Interest that Enclose the Tumors in Breast Ultrasound Images Using the RetinaNet Model",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 4,
         "unknown_authors": 0,
         "collab_type": "International"
       },
@@ -9464,9 +9770,9 @@
     "author_name": "Darwish N.",
     "department": "CHBE",
     "designation": "Professor Chemical Engineering",
-    "total_pubs": 6,
+    "total_pubs": 7,
     "aus_pubs": 3,
-    "local_pubs": 2,
+    "local_pubs": 3,
     "intl_pubs": 1,
     "unknown_pubs": 0,
     "publications": [
@@ -9478,6 +9784,15 @@
         "international_authors": 0,
         "unknown_authors": 0,
         "collab_type": "AUS"
+      },
+      {
+        "scopus_id": "105013265340",
+        "title": "Characterizations of Electrospun PVDF-Based Mixed Matrix Membranes with Nanomaterial Additives",
+        "aus_authors": 4,
+        "local_authors": 2,
+        "international_authors": 0,
+        "unknown_authors": 0,
+        "collab_type": "Local"
       },
       {
         "scopus_id": "85141349081",
@@ -10500,8 +10815,8 @@
     "author_name": "Emam S.",
     "department": "MCE",
     "designation": "Professor Mechanical Engineering",
-    "total_pubs": 9,
-    "aus_pubs": 6,
+    "total_pubs": 10,
+    "aus_pubs": 7,
     "local_pubs": 0,
     "intl_pubs": 3,
     "unknown_pubs": 0,
@@ -10518,6 +10833,15 @@
       {
         "scopus_id": "105007772427",
         "title": "A Review on Vibration Control Using Piezoelectric Shunt Circuits",
+        "aus_authors": 3,
+        "local_authors": 0,
+        "international_authors": 0,
+        "unknown_authors": 0,
+        "collab_type": "AUS"
+      },
+      {
+        "scopus_id": "105013290403",
+        "title": "Exploiting the Internal Resonance for the Vibration Suppression of Beams via Piezoelectric Shunt Circuits",
         "aus_authors": 3,
         "local_authors": 0,
         "international_authors": 0,
@@ -10606,10 +10930,10 @@
     "author_name": "Gharib A.",
     "department": "CSE",
     "designation": "Assistant Professor Computer Engineering",
-    "total_pubs": 6,
+    "total_pubs": 7,
     "aus_pubs": 1,
     "local_pubs": 0,
-    "intl_pubs": 5,
+    "intl_pubs": 6,
     "unknown_pubs": 0,
     "publications": [
       {
@@ -10618,6 +10942,15 @@
         "aus_authors": 1,
         "local_authors": 0,
         "international_authors": 5,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "105013294032",
+        "title": "UBiGTLoc: A Unified BiLSTM-Graph Transformer Localization Framework for IoT Sensor Networks",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 4,
         "unknown_authors": 0,
         "collab_type": "International"
       },
@@ -11756,6 +12089,163 @@
         "international_authors": 0,
         "unknown_authors": 0,
         "collab_type": "AUS"
+      }
+    ]
+  },
+  {
+    "author_id": 56911673900,
+    "author_name": "Hassan M.",
+    "department": "CSE",
+    "designation": "Associate Professor Computer Science Engineering",
+    "total_pubs": 16,
+    "aus_pubs": 1,
+    "local_pubs": 0,
+    "intl_pubs": 15,
+    "unknown_pubs": 0,
+    "publications": [
+      {
+        "scopus_id": "105003641855",
+        "title": "A Framework for Explainable, Comprehensive, and Customizable Memory-Centric Workloads",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 1,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "105006467212",
+        "title": "On the Time Predictability of AXI4",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 3,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "105006909879",
+        "title": "Criticality and Requirement Aware Heterogeneous Coherence for Mixed Criticality Systems",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 1,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85133591558",
+        "title": "Parallelism-Aware High-Performance Cache Coherence with Tight Latency Bounds",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 2,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85133636663",
+        "title": "Predictably and Efficiently Integrating COTS Cache Coherence in Real-Time Systems",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 1,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85135764922",
+        "title": "DISCO: Time-Compositional Cache Coherence for Multi-Core Real-Time Embedded Systems",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 0,
+        "unknown_authors": 0,
+        "collab_type": "AUS"
+      },
+      {
+        "scopus_id": "85139064618",
+        "title": "TinyCare: A tinyML-based Low-Cost Continuous Blood Pressure Estimation on the Extreme Edge",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 1,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85146437817",
+        "title": "PISCOT: A Pipelined Split-Transaction COTS-Coherent Bus for Multi-Core Real-Time Systems",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 1,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85162850965",
+        "title": "Tracking Coherence-Related Contention Delays in Real-Time Multicore Systems",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 4,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85162929469",
+        "title": "The Case for tinyML in Healthcare: CNNs for Real-Time On-Edge Blood Pressure Estimation",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 3,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85166011141",
+        "title": "A Tight Holistic Memory Latency Bound Through Coordinated Management of Memory Resources",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 4,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85185344673",
+        "title": "Improving Timing-Related Guarantees for Main Memory in Multicore Critical Embedded Systems",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 4,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85196548998",
+        "title": "Shared Data Kills Real-Time Cache Analysis. How to Resurrect It?",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 2,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85201284481",
+        "title": "Octopus: a Cycle-Accurate Cache System Simulator",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 2,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85211899281",
+        "title": "HW/SW Collaborative Techniques for Accelerating TinyML Inference Time at No Cost",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 1,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "85211914868",
+        "title": "Event Monitor Validation in High-Integrity Systems",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 5,
+        "unknown_authors": 0,
+        "collab_type": "International"
       }
     ]
   },
@@ -13351,10 +13841,10 @@
     "author_name": "Husseini G.",
     "department": "CHBE",
     "designation": "Professor Chemical Engineering | Associate Vice Chancellor for Research",
-    "total_pubs": 58,
+    "total_pubs": 59,
     "aus_pubs": 36,
     "local_pubs": 2,
-    "intl_pubs": 20,
+    "intl_pubs": 21,
     "unknown_pubs": 0,
     "publications": [
       {
@@ -13419,6 +13909,15 @@
         "international_authors": 0,
         "unknown_authors": 0,
         "collab_type": "AUS"
+      },
+      {
+        "scopus_id": "105013317261",
+        "title": "A Comprehensive Review of Smart Thermosensitive Nanocarriers for Precision Cancer Therapy",
+        "aus_authors": 4,
+        "local_authors": 0,
+        "international_authors": 2,
+        "unknown_authors": 0,
+        "collab_type": "International"
       },
       {
         "scopus_id": "85122859116",
@@ -15076,10 +15575,10 @@
     "author_name": "Mir H.",
     "department": "ELE",
     "designation": "Professor Electrical Engineering",
-    "total_pubs": 30,
+    "total_pubs": 31,
     "aus_pubs": 10,
     "local_pubs": 1,
-    "intl_pubs": 19,
+    "intl_pubs": 20,
     "unknown_pubs": 0,
     "publications": [
       {
@@ -15124,6 +15623,15 @@
         "aus_authors": 2,
         "local_authors": 0,
         "international_authors": 1,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "105013510654",
+        "title": "PPG-Based Accurate Insomnia Detection System Using Convolutional Neural Networks With Self-Attention Mechanism and Gated Recurrent Units",
+        "aus_authors": 1,
+        "local_authors": 0,
+        "international_authors": 5,
         "unknown_authors": 0,
         "collab_type": "International"
       },
@@ -15371,10 +15879,10 @@
     "author_name": "Mortula M.",
     "department": "CVE",
     "designation": "Professor Civil Engineering",
-    "total_pubs": 47,
+    "total_pubs": 48,
     "aus_pubs": 31,
     "local_pubs": 3,
-    "intl_pubs": 13,
+    "intl_pubs": 14,
     "unknown_pubs": 0,
     "publications": [
       {
@@ -15430,6 +15938,15 @@
         "international_authors": 0,
         "unknown_authors": 0,
         "collab_type": "AUS"
+      },
+      {
+        "scopus_id": "105013190028",
+        "title": "GIS-based Bivariate Analysis of the Impact of Climate on the Abu Dhabi (UAE) Mangrove National Park",
+        "aus_authors": 2,
+        "local_authors": 0,
+        "international_authors": 1,
+        "unknown_authors": 0,
+        "collab_type": "International"
       },
       {
         "scopus_id": "85097949990",
@@ -17213,8 +17730,8 @@
     "author_name": "Qaddoumi N.",
     "department": "ELE",
     "designation": "Professor Electrical Engineering",
-    "total_pubs": 14,
-    "aus_pubs": 10,
+    "total_pubs": 15,
+    "aus_pubs": 11,
     "local_pubs": 0,
     "intl_pubs": 4,
     "unknown_pubs": 0,
@@ -17232,6 +17749,15 @@
         "scopus_id": "105003546435",
         "title": "Tackling the Optimal Phasor Measurement Unit Placement and Attack Detection Problems in Smart Grids by Incorporating Machine Learning",
         "aus_authors": 5,
+        "local_authors": 0,
+        "international_authors": 0,
+        "unknown_authors": 0,
+        "collab_type": "AUS"
+      },
+      {
+        "scopus_id": "105013291252",
+        "title": "A Contrast-Source Inversion-Assisted Attention-Unet for Microwave Imaging",
+        "aus_authors": 3,
         "local_authors": 0,
         "international_authors": 0,
         "unknown_authors": 0,
@@ -18331,10 +18857,10 @@
     "author_name": "Shaaban M.",
     "department": "ELE",
     "designation": "Associate Professor Electrical Engineering | Director of the Energy",
-    "total_pubs": 109,
+    "total_pubs": 110,
     "aus_pubs": 22,
     "local_pubs": 4,
-    "intl_pubs": 83,
+    "intl_pubs": 84,
     "unknown_pubs": 0,
     "publications": [
       {
@@ -18484,6 +19010,15 @@
       {
         "scopus_id": "105012387371",
         "title": "Mobile Energy Storage for Inverter-Dominated Isolated Microgrids Resiliency Enhancement Through Maximizing Loadability and Seamless Reconfiguration",
+        "aus_authors": 1,
+        "local_authors": 1,
+        "international_authors": 3,
+        "unknown_authors": 0,
+        "collab_type": "International"
+      },
+      {
+        "scopus_id": "105013378306",
+        "title": "Mobile Energy Storage for Inverter-dominated Isolated Microgrids Resiliency Enhancement Through Maximizing Loadability and Seamless Reconfiguration",
         "aus_authors": 1,
         "local_authors": 1,
         "international_authors": 3,
@@ -21081,8 +21616,8 @@
     "author_name": "Zakaria A.",
     "department": "ELE",
     "designation": "Associate Professor Electrical Engineering",
-    "total_pubs": 15,
-    "aus_pubs": 14,
+    "total_pubs": 16,
+    "aus_pubs": 15,
     "local_pubs": 1,
     "intl_pubs": 0,
     "unknown_pubs": 0,
@@ -21099,6 +21634,15 @@
       {
         "scopus_id": "105005829107",
         "title": "Linear Antenna Array Optimization Using Particle Swarm Optimization Algorithm",
+        "aus_authors": 3,
+        "local_authors": 0,
+        "international_authors": 0,
+        "unknown_authors": 0,
+        "collab_type": "AUS"
+      },
+      {
+        "scopus_id": "105013291252",
+        "title": "A Contrast-Source Inversion-Assisted Attention-Unet for Microwave Imaging",
         "aus_authors": 3,
         "local_authors": 0,
         "international_authors": 0,
@@ -21229,8 +21773,8 @@
     "author_name": "Zualkernan I.",
     "department": "CSE",
     "designation": "Professor Computer Engineering | HOD",
-    "total_pubs": 39,
-    "aus_pubs": 33,
+    "total_pubs": 40,
+    "aus_pubs": 34,
     "local_pubs": 4,
     "intl_pubs": 2,
     "unknown_pubs": 0,
@@ -21248,6 +21792,15 @@
         "scopus_id": "105010211814",
         "title": "Few-Shot Evaluation of Vision Language Models for Detecting Visual Defects in Autonomous Vehicle Software Requirement Specifications",
         "aus_authors": 8,
+        "local_authors": 0,
+        "international_authors": 0,
+        "unknown_authors": 0,
+        "collab_type": "AUS"
+      },
+      {
+        "scopus_id": "105013382846",
+        "title": "Estimating Nitrogen Dioxide Levels Using Open Data and Machine Learning: A Comparative Modeling Study",
+        "aus_authors": 6,
         "local_authors": 0,
         "international_authors": 0,
         "unknown_authors": 0,
